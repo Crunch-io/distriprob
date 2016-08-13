@@ -1,0 +1,6 @@
+.idea/
+distriprob.iml
+src/
+**/node_modules/
+**/typings
+lib/test/
