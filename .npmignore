@@ -1,6 +1,7 @@
 .idea/
 distriprob.iml
 src/
+literature/
 **/node_modules/
 **/typings
 lib/test/

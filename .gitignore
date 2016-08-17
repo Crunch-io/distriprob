@@ -2,6 +2,7 @@
 .idea/
 distriprob.iml
 lib/
+literature/
 **/node_modules/
 **/typings
 src/practice/
