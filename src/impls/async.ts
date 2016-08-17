@@ -9,7 +9,6 @@ export function asyncGen(functionDependencies, script, scriptArgs){
 
   if (isNode()) {
     const scriptString = createScriptStr(functionDependencies, script, scriptArgs, true);
-    console.log(scriptString);
     const Worker = require("webworker-threads").Worker;
     const functionArg = new Function(scriptString);
     worker = new Worker(functionArg);

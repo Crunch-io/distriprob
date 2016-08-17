@@ -1,13 +1,17 @@
 "use strict";
-import {continuedFractionSolver} from "./continuedFractionSolver";
-import {lnGamma} from "./gamma";
-import {rootFind} from "./rootFind"
+import * as cfs from "./continuedFractionSolver";
+import * as gamma from "./gamma";
+import * as rf from "./rootFind"
+
+const lnGamma = gamma.lnGamma;
+const continuedFractionSolver = cfs.continuedFractionSolver;
+const rootFind = rf.rootFind;
 
 /**
  * Created by zacharymartin on August 13, 2016.
  */
 
-function lnBeta(x, y){
+export function lnBeta(x, y){
   return (lnGamma(x) + lnGamma(y)) - lnGamma(x + y);;
 }
 
@@ -23,7 +27,7 @@ function lnBeta(x, y){
  * @returns {any} - the d_i value
  */
 
-function d(i: number, x: number, a: number, b: number): number{
+export function d(i: number, x: number, a: number, b: number): number{
   var result;
   var m;
 
@@ -40,7 +44,7 @@ function d(i: number, x: number, a: number, b: number): number{
   return result;
 }
 
-function continuedFraction(x: number, a: number, b: number): number {
+export function continuedFraction(x: number, a: number, b: number): number {
   function num(j: number): number{
     if (j === 1) {
       return 1;

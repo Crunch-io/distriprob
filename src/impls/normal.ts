@@ -2,7 +2,7 @@
 import {continuedFractionSolver} from "./continuedFractionSolver";
 import * as gamma from "./gamma";
 import * as rf from "./rootFind";
-import {asyncGen} from "./async"
+import {asyncGen} from "./async";
 
 const lowerIncompleteGamma = gamma.lowerIncompleteGamma;
 const rootFind = rf.rootFind;
@@ -78,7 +78,7 @@ export function cdf(x, mu, sigma) {
   }
 
   return asyncGen([
-    rootFind,
+    rootFind, // <<----- might not be necessary, TODO: check if necessary
     continuedFractionSolver,
     gamma.lnGamma,
     gamma.gammaContinuedFraction,
