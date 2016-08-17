@@ -78,7 +78,6 @@ export function cdf(x, mu, sigma) {
   }
 
   return asyncGen([
-    rootFind, // <<----- might not be necessary, TODO: check if necessary
     continuedFractionSolver,
     gamma.lnGamma,
     gamma.gammaContinuedFraction,
@@ -181,7 +180,7 @@ let val = 0.005;
 
 // console.log("q:", quantile(val, 0, 1));
 // console.log("q2:", quantile2(val, 0, 1));
-quantile(val, 0, 1).then((result) => {
+cdf(val, 0, 1).then((result) => {
   console.log("async quantile:", result);
 });
-console.log("sync quantile:", quantileSync(val, 0, 1));
+console.log("sync quantile:", cdfSync(val, 0, 1));
