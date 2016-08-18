@@ -6,15 +6,14 @@ import * as rf from "./rootFind";
 import * as cfs from "./continuedFractionSolver";
 import {asyncGen} from "./async";
 
+// This import and then renaming of imports is necessary to allow the async module to
+// correctly generate web worker scripts.
 const lnGamma = gamma.lnGamma;
 const lnFactorial = gamma.lnFactorial;
 const incompleteBeta = beta.incompleteBeta;
 const discreteQuantileFind = rf.discreteQuantileFind;
 const continuedFractionSolver = cfs.continuedFractionSolver;
 
-/**
- * Created by zacharymartin on August 18, 2016.
- */
 
 function lnBinomialCoefficient(n, chooseK) {
   if (typeof n !== "number" || typeof chooseK !== "number") {
@@ -131,10 +130,6 @@ quantile(0.5, n, p).then((result) => {
   console.log("error:", error);
 });
 
-
-console.log("pmfSync:", pmfSync(k, n, p));
-console.log("cdfSync:", cdfSync(18159, n, p));
-console.log("quantileSync:", quantileSync(0.9999999999999, n, p));
 
 
 

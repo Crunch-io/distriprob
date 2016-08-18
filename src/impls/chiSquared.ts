@@ -4,12 +4,12 @@ import * as gamma from "./gamma";
 import * as rf from "./rootFind";
 import {asyncGen} from "./async";
 
+// This import and then renaming of imports is necessary to allow the async module to
+// correctly generate web worker scripts.
 const lowerIncompleteGamma = gamma.lowerIncompleteGamma;
 const lnGamma = gamma.lnGamma;
 const rootFind = rf.rootFind;
-/**
- * Created by zacharymartin on August 17, 2016.
- */
+
 
 export function pdfSync(x, degreesOfFreedom) {
   if (x <= 0) {
@@ -88,10 +88,3 @@ export function quantile(p, degreesOfFreedom) {
     quantileSync
   ], script, [p, degreesOfFreedom]);
 }
-
-let val = 0.5;
-
-quantile(val, 27).then((result) => {
-  console.log("async:", result);
-});
-console.log("sync:", quantileSync(val, 27));

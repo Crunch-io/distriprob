@@ -3,12 +3,10 @@
 import * as cfs from "./continuedFractionSolver";
 import * as rf from "./rootFind";
 
+// This import and then renaming of imports is necessary to allow the async module to
+// correctly generate web worker scripts.
 const continuedFractionSolver = cfs.continuedFractionSolver;
 const rootFind = rf.rootFind;
-
-/**
- * Created by zacharymartin on August 13, 2016.
- */
 
 
 export function lnGamma(val){

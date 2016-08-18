@@ -4,27 +4,12 @@ import * as gamma from "./gamma";
 import * as rf from "./rootFind";
 import {asyncGen} from "./async";
 
+// This import and then renaming of imports is necessary to allow the async module to
+// correctly generate web worker scripts.
 const lowerIncompleteGamma = gamma.lowerIncompleteGamma;
 const rootFind = rf.rootFind;
 
-/**
- * Created by zacharymartin on August 16, 2016.
- */
 
-/**
- * This function calculates the probability density function for the normal
- * distribution.
- *
- * According to wikipedia (https://en.wikipedia.org/wiki/Normal_distribution), the
- * formula for the normal pdf is:
- *
- *pdf(x, mu, sigma) = (1/(sigma * sqrt(2 * PI))) * e ^ -(((x - mu)^2)/(2 * sigma ^ 2))
- *
- * @param x
- * @param mu - the mean of the normal distribution
- * @param sigma - the standard deviation of the normal distribution
- * @returns number - the probablity density of the normal distribution
- */
 export function pdfSync(x, mu, sigma) {
   if (!mu){
     mu = 0;
@@ -89,57 +74,6 @@ export function cdf(x, mu, sigma) {
   ], script, [x, mu, sigma]);
 }
 
-// export function quantile(p, mu, sigma) {
-//   if (!mu) {
-//     mu = 0;
-//   }
-//
-//   if (!sigma) {
-//     sigma = 1;
-//   }
-//
-//   function initialEstimateOfZ(val) {
-//     function lessThanOrEqualToHalfCase(val) {
-//       const t = Math.sqrt(-2 * Math.log(val));
-//
-//       return ((2.30753 + 0.27061 * t)/(1 + 0.99229*t + 0.04481*t*t)) - t;
-//     }
-//
-//     let z;
-//
-//     if (p <= 0.5) {
-//       z = lessThanOrEqualToHalfCase(val);
-//     } else {
-//       z = - lessThanOrEqualToHalfCase(1 - val);
-//     }
-//
-//     return z;
-//   }
-//
-//   function greaterThanOrEqualToHalfCase(val) {
-//     const zEstimate = initialEstimateOfZ(val);
-//     const invLowIncGammaInitialEstimate = (zEstimate * zEstimate) / 2;
-//     const invLowIncGamma = inverseLowerIncompleteGamma((2 * val) - 1,
-//                                                        1/2,
-//                                                        invLowIncGammaInitialEstimate);
-//     console.log("z estimate:", zEstimate);
-//     console.log("invLowGammaEst:", invLowIncGammaInitialEstimate);
-//     console.log("invLowGammaFinal:", invLowIncGamma);
-//
-//     return Math.sqrt(2 * invLowIncGamma);
-//   }
-//
-//   let z;
-//
-//   if (p >= 0.5) {
-//     z = greaterThanOrEqualToHalfCase(p);
-//   } else {
-//     z = - greaterThanOrEqualToHalfCase(1 - p);
-//   }
-//
-//   return (z * sigma) + mu;
-// }
-
 export function quantileSync(p, mu, sigma) {
   function f (val) {
     return cdfSync(val, 0, 1);
@@ -175,12 +109,3 @@ export function quantile(p, mu, sigma) {
     quantileSync
   ], script, [p, mu, sigma]);
 }
-
-let val = 0.005;
-
-// console.log("q:", quantile(val, 0, 1));
-// console.log("q2:", quantile2(val, 0, 1));
-cdf(val, 0, 1).then((result) => {
-  console.log("async quantile:", result);
-});
-console.log("sync quantile:", cdfSync(val, 0, 1));

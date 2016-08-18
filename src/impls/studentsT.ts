@@ -5,12 +5,11 @@ import * as rf from "./rootFind";
 import {asyncGen} from "./async";
 import {continuedFractionSolver} from "./continuedFractionSolver";
 
+// This import and then renaming of imports is necessary to allow the async module to
+// correctly generate web worker scripts.
 const lnGamma = gamma.lnGamma;
 const incompleteBeta = beta.incompleteBeta;
 const rootFind = rf.rootFind;
-/**
- * Created by zacharymartin on August 16, 2016.
- */
 
 
 export function pdfSync(x, degreesOfFreedom) {
@@ -59,20 +58,6 @@ export function cdf(x, degreesOfFreedom) {
   ], script, [x, degreesOfFreedom]);
 }
 
-// export function quantile(p, degreesOfFreedom) {
-//   function greaterThanOrEqualToHalfCase(val, dof) {
-//     let inv = inverseIncompleteBeta(0.5 * (1-val), dof/2, 0.5);
-//
-//     return Math.sqrt((dof/inverseIncompleteBeta(2 * (1-val), dof/2, 0.5)) - dof);
-//   }
-//
-//   if (p >= 0.5) {
-//     return greaterThanOrEqualToHalfCase(p, degreesOfFreedom);
-//   } else {
-//     return 1 - quantile(0.5 + p, degreesOfFreedom);
-//   }
-// }
-
 export function quantileSync(p, degreesOfFreedom) {
   function f(val) {
     return cdfSync(val, degreesOfFreedom);
@@ -105,10 +90,3 @@ export function quantile(p, degreesOfFreedom) {
     quantileSync
   ], script, [p, degreesOfFreedom]);
 }
-
-let val = 0.95;
-
-quantile(val, 27).then((result) => {
-  console.log("async:", result);
-});
-console.log("sync:", quantileSync(val, 27));

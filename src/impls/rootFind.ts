@@ -1,9 +1,5 @@
 "use strict";
 
-/**
- * Created by zacharymartin on August 16, 2016.
- */
-
 
 export function rootFind(fctn, derivativeFctn, value, initialRootEstimate, max, min){
   var root = newton(fctn, derivativeFctn, value, initialRootEstimate, max, min);

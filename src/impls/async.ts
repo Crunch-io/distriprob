@@ -1,9 +1,5 @@
 "use strict";
 
-/**
- * Created by zacharymartin on August 16, 2016.
- */
-
 export function asyncGen(functionDependencies, script, scriptArgs){
   let worker;
 

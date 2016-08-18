@@ -5,14 +5,13 @@ import * as rf from "./rootFind";
 import {asyncGen} from "./async";
 import {continuedFractionSolver} from "./continuedFractionSolver";
 
+// This import and then renaming of imports is necessary to allow the async module to
+// correctly generate web worker scripts.
 const lnGamma = gamma.lnGamma;
 const lnBeta = beta.lnBeta;
 const incompleteBeta = beta.incompleteBeta;
 const rootFind = rf.rootFind;
 
-/**
- * Created by zacharymartin on August 17, 2016.
- */
 
 export function pdfSync(x, dof1, dof2) {
   if (x <= 0) {
@@ -90,11 +89,4 @@ export function quantile(p, dof1, dof2) {
     quantileSync
   ], script, [p, dof1, dof2]);
 }
-
-let val = 0.5;
-
-quantile(val, 19, 8).then((result) => {
-  console.log("async:", result);
-});
-console.log("sync:", quantileSync(val, 19, 8));
 
