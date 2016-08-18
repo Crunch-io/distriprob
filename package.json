@@ -11,7 +11,8 @@
     "test": "./node_modules/mocha/bin/mocha \"./lib/test/**/*.js\" --reporter \"nyan\"",
     "ci-test": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -R tap \"./lib/test/**/*.js\" > test.tap && ./node_modules/istanbul/lib/cli.js report clover",
     "typescript-transpile": "rm -rf lib && ./node_modules/typescript/bin/tsc --project .",
-    "install-typings": "./node_modules/typings/dist/bin.js install"
+    "install-typings": "./node_modules/typings/dist/bin.js install",
+    "bundle": "rm -f ./bundle.js && ./node_modules/browserify/bin/cmd.js ./lib/index.js > ./bundle.js"
   },
   "repository": {
     "type": "git",
@@ -41,6 +42,7 @@
   },
   "homepage": "https://github.com/zachmart/distriprob#readme",
   "devDependencies": {
+    "browserify": "^13.1.0",
     "casual": "^1.5.3",
     "chai": "^3.5.0",
     "istanbul": "^0.4.4",

@@ -3,6 +3,7 @@
 distriprob.iml
 lib/
 literature/
-**/node_modules/
+node_modules/
 **/typings
 src/practice/
+bundle.js

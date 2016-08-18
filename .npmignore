@@ -2,6 +2,9 @@
 distriprob.iml
 src/
 literature/
-**/node_modules/
+node_modules/
 **/typings
 lib/test/
+.gitignore
+tsconfig.json
+typings.json
