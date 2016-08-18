@@ -65,18 +65,3 @@ function isNode(): boolean {
   return typeof process === "object" && process + "" === "[object process]";
 }
 
-function testfunct(a, b) {
-  a = b;
-  return b * a;
-}
-
-function script() {
-  return testfunct(4, 5);
-}
-
-//console.log(createScriptStr([testfunct], script));
-
-// asyncGen([testfunct], script, [1,2,3]).then((result) => {
-//   console.log(result);
-// });
-

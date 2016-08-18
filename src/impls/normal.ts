@@ -43,8 +43,8 @@ export function pdfSync(x, mu, sigma) {
 }
 
 export function pdf(x, mu, sigma) {
-  function script(a,b,c) {
-    return pdfSync(a, b, c)
+  function script(a, b, c) {
+    return pdfSync(a, b, c);
   }
   return asyncGen([pdfSync], script, [x, mu, sigma]);
 }

@@ -7,6 +7,7 @@ import * as _normal from "./impls/normal";
 import * as studentsT from "./impls/studentsT";
 import * as chiSquared from "./impls/chiSquared";
 import * as fDist from "./impls/fDist";
+import * as binom from "./impls/binomial";
 
 export const normal = {
   pdf: function(x, mu?, sigma?): Promise<number> {
@@ -91,4 +92,25 @@ export const F = {
     return fDist.quantileSync(p, dof1, dof2);
   }
 };
+
+export const binomial = {
+  pdf: function(k, n, probSuccess): Promise<number> {
+    return binom.pmf(k, n, probSuccess);
+  },
+  cdf: function(k, n, probSuccess): Promise<number> {
+    return binom.cdf(k, n, probSuccess);
+  },
+  quantile: function(k, n, probSuccess): Promise<number> {
+    return binom.quantile(k, n, probSuccess);
+  },
+  pdfSync: function(k, n, probSuccess): number {
+    return binom.pmfSync(k, n, probSuccess);
+  },
+  cdfSync: function(k, n, probSuccess): number {
+    return binom.cdfSync(k, n, probSuccess);
+  },
+  quantileSync: function(k, n, probSuccess): number {
+    return binom.quantileSync(k, n, probSuccess);
+  }
+}
 

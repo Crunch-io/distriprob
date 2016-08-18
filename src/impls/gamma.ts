@@ -51,6 +51,27 @@ export function lnGamma(val){
   return result;
 }
 
+/**
+ * This function gives the log of the extended(on all non-negative n, possibly
+ * non-integer n) factorial function.
+ * @param n
+ */
+export function lnFactorial(n) {
+  if (typeof n !== "number"){
+    throw new Error(`The log factorial function is only defined for numeric arguments.`);
+  }
+
+  if (n < 0) {
+    throw new Error(`The log factorial of negative numbers in not defined.`);
+  }
+
+  if (n === 0) {
+    return Number.NEGATIVE_INFINITY;
+  }
+
+  return lnGamma(n + 1);
+}
+
 export function gammaContinuedFraction(x, a){
 
   function num(j: number): number {
