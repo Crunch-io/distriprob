@@ -5,7 +5,8 @@
  */
 import * as _normal from "./impls/normal";
 import * as studentsT from "./impls/studentsT";
-import * as chiSquared from "./impls/chiSquared"
+import * as chiSquared from "./impls/chiSquared";
+import * as fDist from "./impls/fDist";
 
 export const normal = {
   pdf: function(x, mu?, sigma?): Promise<number> {
@@ -67,6 +68,27 @@ export const chi2 = {
   },
   quantileSync: function(p, degreesOfFreedom): number {
     return chiSquared.quantileSync(p, degreesOfFreedom);
+  }
+};
+
+export const F = {
+  pdf: function(x, dof1, dof2): Promise<number> {
+    return fDist.pdf(x, dof1, dof2);
+  },
+  cdf: function(x, dof1, dof2): Promise<number> {
+    return fDist.cdf(x, dof1, dof2);
+  },
+  quantile: function(p, dof1, dof2): Promise<number> {
+    return fDist.quantile(p, dof1, dof2);
+  },
+  pdfSync: function(x, dof1, dof2): number {
+    return fDist.pdfSync(x, dof1, dof2);
+  },
+  cdfSync: function(x, dof1, dof2): number {
+    return fDist.cdfSync(x, dof1, dof2);
+  },
+  quantileSync: function(p, dof1, dof2): number {
+    return fDist.quantileSync(p, dof1, dof2);
   }
 };
 
