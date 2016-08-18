@@ -143,6 +143,7 @@ export function lnLowerIncompleteGamma(x, a){
     const incompleteGammaB = Math.log(1 - Math.exp(lnUpperIncompleteGammaB(x, a)));
     return ((1 - weight) * incompleteGammaA) + (weight * incompleteGammaB);
   } else {
+    // TODO: consider how to deal with rounding error here
     return Math.log(1 - Math.exp(lnUpperIncompleteGammaB(x, a)));
   }
 }
@@ -156,6 +157,7 @@ export function lowerIncompleteGamma(x, a){
     var incompleteGammaB = 1 - Math.exp(lnUpperIncompleteGammaB(x, a));
     return (1 - weight) * incompleteGammaA + weight * incompleteGammaB;
   } else {
+    // TODO: consider how to deal with rounding error here
     return 1 - Math.exp(lnUpperIncompleteGammaB(x, a));
   }
 }

@@ -117,20 +117,35 @@ export function bisection(fctn, value, max, min){
 }
 
 
-export function discreteQuantileFind(simplifiedCDF, p, max, min) {
+export function discreteQuantileFind(simplifiedCDF, p, max, min, initialEstimate = 0) {
   if (max === null) {
     // find a value of max where cdf(max) > value
+    let offset = 0.5;
+    let cdfVal;
 
-    for (max = 1; simplifiedCDF(max) < p; max *= 2) {
-      // do nothing here
-    }
+    do {
+      offset *= 2;
+      max = initialEstimate + offset;
+      cdfVal = simplifiedCDF(max);
+
+      if (cdfVal < p){
+        if (min === null || min < max) {
+          min = max;
+        }
+      } else {
+        break;
+      }
+    } while (true);
   }
-
   if (min === null) {
     // find a value of min where cdf(min) < value
-    for (min = -1; simplifiedCDF(min) >= p; min *= 2) {
-      // do nothing here
-    }
+    let offset = 0.5;
+
+    do {
+      offset *= 2;
+      min = initialEstimate - offset;
+      console.log("min:", min);
+    } while (simplifiedCDF(min) >= p);
   }
 
   let center;
@@ -139,7 +154,7 @@ export function discreteQuantileFind(simplifiedCDF, p, max, min) {
   let maxMinAve;
 
   while(max - min > 1) {
-    maxMinAve = ((max - min)/2) + min;
+    maxMinAve = (max + min)/2;
     centerFloor = Math.floor(maxMinAve);
     centerCeil = Math.ceil(maxMinAve);
 
