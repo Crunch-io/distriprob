@@ -26,6 +26,7 @@
     "cumulative",
     "quantile",
     "normal",
+    "gaussian",
     "student's",
     "t",
     "f",
