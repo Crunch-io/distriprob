@@ -108,28 +108,6 @@ export function quantile(p, n, probSuccess) {
   ], script, [p, n, probSuccess]);
 }
 
-let k =40830;
-let n =60532;
-let p =0.3;
-
-pmf(k, n, p).then((result) => {
-  console.log("pmf:", result);
-}, (error) => {
-  console.log("error:", error);
-});
-
-cdf(k, n, p).then((result) => {
-  console.log("cdf:", result);
-}, (error) => {
-  console.log("error:", error);
-});
-
-quantile(0.5, n, p).then((result) => {
-  console.log("quantile:", result);
-}, (error) => {
-  console.log("error:", error);
-});
-
 
 
 
