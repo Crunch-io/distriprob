@@ -5,8 +5,8 @@
   "main": "lib/index.js",
   "typings": "lib/index",
   "scripts": {
-    "preversion": "npm test",
-    "version": "npm run typescript-transpile && git add --all",
+    "preversion": "npm run typescript-transpile && npm run bundle && npm test",
+    "version": "git add --all",
     "postversion": "git push && git push --tags && npm publish",
     "test": "./node_modules/mocha/bin/mocha \"./lib/test/**/*.js\" --reporter \"nyan\"",
     "ci-test": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -R tap \"./lib/test/**/*.js\" > test.tap && ./node_modules/istanbul/lib/cli.js report clover",

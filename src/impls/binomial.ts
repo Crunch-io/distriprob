@@ -15,7 +15,7 @@ const discreteQuantileFind = rf.discreteQuantileFind;
 const continuedFractionSolver = cfs.continuedFractionSolver;
 
 
-function lnBinomialCoefficient(n, chooseK) {
+export function lnBinomialCoefficient(n, chooseK) {
   if (typeof n !== "number" || typeof chooseK !== "number") {
     throw new Error(`The binomial coefficient function is only defined for numeric${""
     } arguments n and k.`);

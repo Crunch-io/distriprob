@@ -140,12 +140,13 @@ export function discreteQuantileFind(simplifiedCDF, p, max, min, initialEstimate
   if (min === null) {
     // find a value of min where cdf(min) < value
     let offset = 0.5;
+    let cdfVal;
 
     do {
       offset *= 2;
       min = initialEstimate - offset;
-      console.log("min:", min);
-    } while (simplifiedCDF(min) >= p);
+      cdfVal = simplifiedCDF(min);
+    } while (cdfVal >= p);
   }
 
   let center;
@@ -166,6 +167,8 @@ export function discreteQuantileFind(simplifiedCDF, p, max, min, initialEstimate
     } else {
       center = centerFloor;
     }
+
+    let cdfVal = simplifiedCDF(center);
 
     if (simplifiedCDF(center) >= p) {
       max = center;

@@ -1,13 +1,12 @@
 "use strict";
 
-/**
- * Created by zacharymartin on August 13, 2016.
- */
 import * as _normal from "./impls/normal";
 import * as studentsT from "./impls/studentsT";
 import * as chiSquared from "./impls/chiSquared";
 import * as fDist from "./impls/fDist";
 import * as binom from "./impls/binomial";
+import * as _poisson from "./impls/poisson";
+import * as hypergeo from "./impls/hypergeometric";
 
 export const normal = {
   pdf: function(x, mu?, sigma?): Promise<number> {
@@ -100,8 +99,8 @@ export const binomial = {
   cdf: function(k, n, probSuccess): Promise<number> {
     return binom.cdf(k, n, probSuccess);
   },
-  quantile: function(k, n, probSuccess): Promise<number> {
-    return binom.quantile(k, n, probSuccess);
+  quantile: function(p, n, probSuccess): Promise<number> {
+    return binom.quantile(p, n, probSuccess);
   },
   pdfSync: function(k, n, probSuccess): number {
     return binom.pmfSync(k, n, probSuccess);
@@ -109,8 +108,51 @@ export const binomial = {
   cdfSync: function(k, n, probSuccess): number {
     return binom.cdfSync(k, n, probSuccess);
   },
-  quantileSync: function(k, n, probSuccess): number {
-    return binom.quantileSync(k, n, probSuccess);
+  quantileSync: function(p, n, probSuccess): number {
+    return binom.quantileSync(p, n, probSuccess);
   }
-}
+};
+
+export const poisson = {
+  pdf: function(k, lambda): Promise<number> {
+    return _poisson.pmf(k, lambda);
+  },
+  cdf: function(k, lambda): Promise<number> {
+    return _poisson.cdf(k, lambda);
+  },
+  quantile: function(p, lambda): Promise<number> {
+    return _poisson.quantile(p, lambda);
+  },
+  pdfSync: function(k, lambda): number {
+    return _poisson.pmfSync(k, lambda);
+  },
+  cdfSync: function(k, lambda): number {
+    return _poisson.cdfSync(k, lambda);
+  },
+  quantileSync: function(p, lambda): number {
+    return _poisson.quantileSync(p, lambda);
+  }
+};
+
+export const hypergeometric = {
+  pdf: function(sampleSuccesses, draws, successPop, totalPop): Promise<number> {
+    return hypergeo.pmf(sampleSuccesses, draws, successPop, totalPop);
+  },
+  cdf: function(sampleSuccesses, draws, successPop, totalPop): Promise<number> {
+    return hypergeo.cdf(sampleSuccesses, draws, successPop, totalPop);
+  },
+  quantile: function(p, draws, successPop, totalPop): Promise<number> {
+    return hypergeo.quantile(p, draws, successPop, totalPop);
+  },
+  pdfSync: function(sampleSuccesses, draws, successPop, totalPop): number {
+    return hypergeo.pmfSync(sampleSuccesses, draws, successPop, totalPop);
+  },
+  cdfSync: function(sampleSuccesses, draws, successPop, totalPop): number {
+    return hypergeo.cdfSync(sampleSuccesses, draws, successPop, totalPop);
+  },
+  quantileSync: function(p, draws, successPop, totalPop): number {
+    return hypergeo.quantileSync(p, draws, successPop, totalPop);
+  }
+};
+
 
