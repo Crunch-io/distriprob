@@ -30,10 +30,13 @@
     "gaussian",
     "student's",
     "t",
-    "f",
+    "F",
     "chi-square",
     "gamma",
-    "beta"
+    "beta",
+    "poisson",
+    "binomial",
+    "hypergeometric"
   ],
   "author": "Zachary Martin",
   "license": "MIT",
