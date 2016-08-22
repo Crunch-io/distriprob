@@ -54,15 +54,15 @@ Supported Distributions
 -----------------------
 
 ###Continuous
-1. [Normal](#Normal) (`distriprob.normal`)
-2. [Student's t](#Student's t) (`distriprob.t`)
-3. [Chi Squared](#Chi Squared) (`distriprob.chi2`)
-4. [F](#F) (`distriprob.F`)
+1. [Normal](#normal) (`distriprob.normal`)
+2. [Student's t](#student's t) (`distriprob.t`)
+3. [Chi Squared](#chi Squared) (`distriprob.chi2`)
+4. [F](#f) (`distriprob.F`)
 
 ###Discrete
-5. [Binomial](#Binomial) (`distriprob.binomial`)
-6. [Poisson](#Poisson) (`distriprob.poisson`)
-7. [Hypergeometric](#HyperGeometric) (`distriprob.hypergeometric`)
+5. [Binomial](#binomial) (`distriprob.binomial`)
+6. [Poisson](#poisson) (`distriprob.poisson`)
+7. [Hypergeometric](#hypergeometric) (`distriprob.hypergeometric`)
 
 The functionality for each of these distributions is located directly on the exported
 `distriprob` object. On each of the distribution objects there are three functions:
