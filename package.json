@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "typings": "lib/index",
   "scripts": {
+    "build": "npm run typescript-transpile && npm run bundle",
     "preversion": "npm run typescript-transpile && npm run bundle && npm test",
     "version": "git add --all",
     "postversion": "git push && git push --tags && npm publish",
