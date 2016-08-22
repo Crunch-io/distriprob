@@ -25,38 +25,44 @@ The distriprob libaray can be downloaded using NPM:
 
 Or by cloning the github repository:
 
-    git clone https://github.com/zachmart/distriprob.git
-    cd distriprob
-    npm run build
+```bash
+git clone https://github.com/zachmart/distriprob.git
+cd distriprob
+npm run build
+```
 
 The distriprob libary is designed to be used with __nodejs__ or in the browser. Distriprob
 is written in typescript and transpiled to ES6. So the package may be imported using ES6
 imports:
 
-    import * as distriprob from "distriprob";
+```javascript
+import * as distriprob from "distriprob";
+```
 
 or using *commonjs* `require`'s:
 
-    const distriprob = require("distriprob");
+```javascript
+const distriprob = require("distriprob");
+```
 
 In addition, the distriprob library contains a browserify-ed bundle for use in the browser
 with `<script>` tags which will introduce the global variable `distriprob`:
-
-    <script src="node_modules/distriprob/bundle.js" type="text/javascript></script>
-
+```html
+<script src="node_modules/distriprob/bundle.js" type="text/javascript></script>
+```
 Supported Distributions
 -----------------------
 
 ###Continuous
-1. Normal (`distriprob.normal`)
-2. Student's (`distriprob.t`)
-3. Chi Squared (`distriprob.chi2`)
-4. F (`distriprob.F`)
+1. [Normal](#Normal) (`distriprob.normal`)
+2. [Student's t](#Student's t) (`distriprob.t`)
+3. [Chi Squared](#Chi Squared) (`distriprob.chi2`)
+4. [F](#F) (`distriprob.F`)
 
 ###Discrete
-5. Binomial (`distriprob.binomial`)
-6. Poisson (`distriprob.poisson`)
-7. Hypergeometric (`distriprob.hypergeometric`)
+5. [Binomial](#Binomial) (`distriprob.binomial`)
+6. [Poisson](#Poisson) (`distriprob.poisson`)
+7. [Hypergeometric](#HyperGeometric) (`distriprob.hypergeometric`)
 
 The functionality for each of these distributions is located directly on the exported
 `distriprob` object. On each of the distribution objects there are three functions:
@@ -74,16 +80,39 @@ Examples:
 API by Distribution in detail
 -----------------------------
 
-###Continuous
+###Continuous Distributions ----------------
 
 ####Normal
-Given a random variable X with a Normal probabilty distribution with mean mu and
-standard deviation sigma
+Given a random variable X with a Normal probabilty distribution with mean _mu_ and
+standard deviation _sigma_:
 
-`distriprob.normal.pdf(x, mu, sigma)` returns an ES6 promise for the probility density of
-X where:
-* x - is the value of X for the desired density
-* mu - is the mean of X
-* sigma - is the standard deviation of X
+* `distriprob.normal.pdf(x, mu, sigma)` returns an ES6 promise for the numeric probability
+density of X where:
+  * x: number - is the value of X for the desired density
+  * mu: number - is the mean of X
+  * sigma: number > 0 - is the standard deviation of X
+* `distriprob.normal.pdfSync(x, mu, sigma)` returns the numeric probability density of X 
+where:
+  * x: number - is the value of X for the desired density
+  * mu: number - is the mean of X
+  * sigma: number > 0 - is the standard deviation of X
+* `distriprob.normal.cdf(x, mu, sigma)`
 
-`distriprob.normal.pdfSync(x, mu, sigma)`
+####Student's t
+
+####Chi Squared
+
+####F
+
+###Discrete Distributions ---------------------
+
+####Binomial
+
+####Poisson
+
+####Hypergeometric
+
+
+License
+-------
+**MIT** --- open source
