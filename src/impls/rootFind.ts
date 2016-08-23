@@ -5,6 +5,7 @@ export function rootFind(fctn, derivativeFctn, value, initialRootEstimate, max, 
   var root = newton(fctn, derivativeFctn, value, initialRootEstimate, max, min);
 
   if (root === "non-convergent") {
+    console.log("non-convergent");
     root = bisection(fctn, value, max, min);
   }
 
@@ -24,7 +25,6 @@ export function newton(fctn, derivativeFctn, value, initialRootEstimate, max, mi
 
   while (true){
     fOfX = fctn(oldX);
-
 
     fPrimeOfX = derivativeFctn(oldX);
     x = oldX - ((fOfX - value) / fPrimeOfX);

@@ -225,6 +225,10 @@ export function pdf(x, shape, scale) {
 }
 
 export function cdfSync(x, shape, scale, lowerTail = true) {
+  return gammaCDF(x, shape, scale, lowerTail);
+}
+
+export function gammaCDF(x, shape, scale, lowerTail = true) {
   if (x <= 0) {
     if (lowerTail) {
       return 0;

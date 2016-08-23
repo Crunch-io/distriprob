@@ -8,6 +8,7 @@ import * as binom from "./impls/binomial";
 import * as _poisson from "./impls/poisson";
 import * as hypergeo from "./impls/hypergeometric";
 import * as _gamma from "./impls/gamma";
+import * as exp from "./impls/exponential";
 
 export const normal = {
   pdf: function(x, mu?, sigma?): Promise<number> {
@@ -90,6 +91,27 @@ export const F = {
   },
   quantileSync: function(p, dof1, dof2): number {
     return fDist.quantileSync(p, dof1, dof2);
+  }
+};
+
+export const exponential = {
+  pdf: function(x, lambda): Promise<number> {
+    return exp.pdf(x, lambda);
+  },
+  cdf: function(x, lambda, lowerTail = true): Promise<number> {
+    return exp.cdf(x, lambda, lowerTail);
+  },
+  quantile: function(p, lambda, lowerTail = true): Promise<number> {
+    return exp.quantile(p, lambda, lowerTail);
+  },
+  pdfSync: function(x, lambda): number {
+    return exp.pdfSync(x, lambda);
+  },
+  cdfSync: function(x, lambda, lowerTail = true): number {
+    return exp.cdfSync(x, lambda, lowerTail);
+  },
+  quantileSync: function(p, lambda, lowerTail = true): number {
+    return exp.quantileSync(p, lambda, lowerTail);
   }
 };
 
