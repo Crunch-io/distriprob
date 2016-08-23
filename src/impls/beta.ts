@@ -1,7 +1,8 @@
 "use strict";
 import * as cfs from "./continuedFractionSolver";
 import * as gamma from "./gamma";
-import * as rf from "./rootFind"
+import * as rf from "./rootFind";
+import * as di from "./definiteIntegral";
 
 // This import and then renaming of imports is necessary to allow the async module to
 // correctly generate web worker scripts.
@@ -79,6 +80,22 @@ export function lnIncompleteBeta(x: number, a: number, b: number): number {
   return alnx + bln1MinusX - lna - lnBetaAB + lnContinuedFraction;
 }
 
+export function lnUpperIncompleteBeta(x: number, a: number, b: number): number {
+  return lnIncompleteBeta(1-x, b, a);
+}
+
+export function upperIncompleteBeta(x, a , b) {
+  return Math.exp(lnUpperIncompleteBeta(x, a, b));
+}
+
+export function lowerIncompleteBeta(x, a, b) {
+  function f(val) {
+    return pdfSync(val, a, b);
+  }
+
+  return di.gaussQuadrature(f, 0, x, 101);
+}
+
 export function incompleteBeta(x, a, b){
   return Math.exp(lnIncompleteBeta(x, a, b))
 }
@@ -105,3 +122,46 @@ export function inverseIncompleteBeta(p, a, b){
     1,
     0);
 }
+
+export function pdfSync(x, alpha, beta) {
+  if (x < 0 || x > 1) {
+    return 0;
+  } else {
+    return Math.exp(((alpha -1 ) * Math.log(x)) + ((beta - 1) * Math.log(1 - x))
+      - lnBeta(alpha, beta));
+  }
+}
+
+export function cdfSync(x, alpha, beta, lowerTail = true) {
+  if (x <= 0) {
+    if (lowerTail) {
+      return 0;
+    } else {
+      return 1;
+    }
+  } else if (x >= 1) {
+    if (lowerTail) {
+      return 1;
+    } else {
+      return 0;
+    }
+  } else {
+    if (lowerTail) {
+      return incompleteBeta(x, alpha, beta);
+    } else {
+      return upperIncompleteBeta(x, alpha, beta);
+      //return incompleteBeta(1 - x, beta, alpha);
+    }
+  }
+}
+
+const X = 0.9999;
+const alpha = 400000;
+const beta = 5;
+
+// console.log("pdfSync:", pdfSync(X, alpha, beta));
+// console.log("cdfSync:", cdfSync(X, alpha, beta));
+// console.log("lowerIncBeta:", lowerIncompleteBeta(X, alpha, beta));
+// console.log("1 - cdfSync:", cdfSync(X, alpha, beta, false));
+//console.log("upperIncBeta:", upperIncompleteBeta(X, alpha, beta));
+//console.log("sum:", lowerIncompleteBeta(X, alpha, beta) + upperIncompleteBeta(X, alpha, beta) );
