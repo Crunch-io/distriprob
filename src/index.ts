@@ -9,6 +9,31 @@ import * as _poisson from "./impls/poisson";
 import * as hypergeo from "./impls/hypergeometric";
 import * as _gamma from "./impls/gamma";
 import * as exp from "./impls/exponential";
+import * as _uniform from "./impls/uniform";
+
+export const uniform = {
+  pdf: function(x, lowerSupportBound, upperSupportBound): Promise<number> {
+    return _uniform.pdf(x, lowerSupportBound, upperSupportBound);
+  },
+  cdf: function(x, lowerSupportBound, upperSupportBound, lowerTail = true):
+    Promise<number> {
+    return _uniform.cdf(x, lowerSupportBound, upperSupportBound, lowerTail);
+  },
+  quantile: function(x, lowerSupportBound, upperSupportBound, lowerTail = true):
+    Promise<number> {
+    return _uniform.quantile(x, lowerSupportBound, upperSupportBound, lowerTail);
+  },
+  pdfSync: function(x, lowerSupportBound, upperSupportBound): number {
+    return _uniform.pdfSync(x, lowerSupportBound, upperSupportBound);
+  },
+  cdfSync: function(x, lowerSupportBound, upperSupportBound, lowerTail = true): number {
+    return _uniform.cdfSync(x, lowerSupportBound, upperSupportBound, lowerTail);
+  },
+  quantileSync: function(x, lowerSupportBound, upperSupportBound, lowerTail = true):
+    number {
+    return _uniform.quantileSync(x, lowerSupportBound, upperSupportBound, lowerTail);
+  }
+};
 
 export const normal = {
   pdf: function(x, mu?, sigma?): Promise<number> {

@@ -11,7 +11,7 @@ const rootFind = rf.rootFind;
 
 
 export function lnBeta(x, y){
-  return (lnGamma(x) + lnGamma(y)) - lnGamma(x + y);;
+  return (lnGamma(x) + lnGamma(y)) - lnGamma(x + y);
 }
 
 /**
