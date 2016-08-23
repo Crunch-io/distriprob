@@ -1,5 +1,5 @@
 "use strict";
-
+import {asyncGen} from "./async";
 import * as cfs from "./continuedFractionSolver";
 import * as rf from "./rootFind";
 
@@ -143,8 +143,20 @@ export function lnLowerIncompleteGamma(x, a){
     const incompleteGammaB = Math.log(1 - Math.exp(lnUpperIncompleteGammaB(x, a)));
     return ((1 - weight) * incompleteGammaA) + (weight * incompleteGammaB);
   } else {
-    // TODO: consider how to deal with rounding error here
     return Math.log(1 - Math.exp(lnUpperIncompleteGammaB(x, a)));
+  }
+}
+
+export function lnUpperIncompleteGamma(x, a) {
+  if (x <= a){
+    return Math.log(1 - Math.exp(lnLowerIncompleteGammaA(x, a)));
+  } else if (x > a && x <= a + 1) {
+    const weight = x - a;
+    const incompleteGammaA = Math.log(1 - Math.exp(lnLowerIncompleteGammaA(x, a)));
+    const incompleteGammaB = lnUpperIncompleteGammaB(x, a);
+    return ((1 - weight) * incompleteGammaA) + (weight * incompleteGammaB);
+  } else {
+    return lnUpperIncompleteGammaB(x, a);
   }
 }
 
@@ -157,8 +169,20 @@ export function lowerIncompleteGamma(x, a){
     var incompleteGammaB = 1 - Math.exp(lnUpperIncompleteGammaB(x, a));
     return (1 - weight) * incompleteGammaA + weight * incompleteGammaB;
   } else {
-    // TODO: consider how to deal with rounding error here
     return 1 - Math.exp(lnUpperIncompleteGammaB(x, a));
+  }
+}
+
+export function upperIncompleteGamma(x, a){
+  if (x <= a){
+    return 1 - Math.exp(lnLowerIncompleteGammaA(x, a));
+  } else if (x > a && x <= a + 1) {
+    var weight = x - a;
+    var incompleteGammaA = 1 - Math.exp(lnLowerIncompleteGammaA(x, a));
+    var incompleteGammaB = Math.exp(lnUpperIncompleteGammaB(x, a));
+    return (1 - weight) * incompleteGammaA + weight * incompleteGammaB;
+  } else {
+    return Math.exp(lnUpperIncompleteGammaB(x, a));
   }
 }
 
@@ -184,5 +208,99 @@ export function inverseLowerIncompleteGamma(p, a, initialEstimate?){
                   initialEstimate,
                   null,
                   0);
+}
+
+export function pdfSync(x, shape, scale) {
+  if (x <= 0) {
+    return 0;
+  } else {
+    const lnNum = ((shape - 1) * Math.log(x)) - (x / scale);
+    const lnDenom = (lnGamma(shape) + (shape * Math.log(scale)));
+    return Math.exp(lnNum - lnDenom);
+  }
+}
+
+export function pdf(x, shape, scale) {
+  return asyncGen([lnGamma], pdfSync, [x, shape, scale]);
+}
+
+export function cdfSync(x, shape, scale, lowerTail = true) {
+  if (x <= 0) {
+    if (lowerTail) {
+      return 0;
+    } else {
+      return 1;
+    }
+  } else {
+    let a = x/scale;
+
+    if (lowerTail) {
+      return lowerIncompleteGamma(a, shape);
+    } else {
+      return upperIncompleteGamma(a, shape);
+    }
+  }
+}
+
+export function cdf(x, shape, scale, lowerTail = true) {
+  return asyncGen([
+    lnGamma,
+    gammaContinuedFraction,
+    continuedFractionSolver,
+    lnLowerIncompleteGammaA,
+    lnUpperIncompleteGammaB,
+    lowerIncompleteGamma,
+    upperIncompleteGamma
+  ], cdfSync, [x, shape, scale, lowerTail]);
+}
+
+export function quantileSync(p, shape, scale, lowerTail = true) {
+  if (p === 0) {
+    if (lowerTail) {
+      return 0;
+    } else {
+      return Number.POSITIVE_INFINITY;
+    }
+  } else if (p === 1) {
+    if (lowerTail) {
+      return Number.POSITIVE_INFINITY;
+    } else {
+      return 0;
+    }
+  } else {
+    function f(val) {
+      return cdfSync(val, shape, scale, lowerTail);
+    }
+
+    function fPrime(val) {
+      if (lowerTail) {
+        return pdfSync(val, shape, scale);
+      } else {
+        return - pdfSync(val, shape, scale);
+      }
+
+    }
+
+    const distMean = shape * scale;
+
+    return rootFind(f, fPrime, p, distMean, null, 0);
+  }
+}
+
+export function quantile(p, shape, scale, lowerTail = true) {
+  return asyncGen([
+    lnGamma,
+    gammaContinuedFraction,
+    continuedFractionSolver,
+    lnLowerIncompleteGammaA,
+    lnUpperIncompleteGammaB,
+    lowerIncompleteGamma,
+    upperIncompleteGamma,
+    rootFind,
+    rf.newton,
+    rf.bisection,
+    pdfSync,
+    cdfSync
+  ], quantileSync, [p, shape, scale, lowerTail]);
 }
 

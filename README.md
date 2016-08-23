@@ -77,34 +77,49 @@ Examples:
       console.log(result);                            // 1
     });
 
-API by Distribution in detail
------------------------------
+API by Distribution
+-------------------
 
-###Continuous Distributions ----------------
+###Continuous Distributions 
 
 ####Normal
-Given a random variable X with a Normal probabilty distribution with mean _mu_ and
+Given a random variable X with a Normal probability distribution with mean _mu_ and
 standard deviation _sigma_:
 
 * `distriprob.normal.pdf(x, mu, sigma)` returns an ES6 promise for the numeric probability
 density of X where:
   * x: number - is the value of X for the desired density
-  * mu: number - is the mean of X
-  * sigma: number > 0 - is the standard deviation of X
+  * mu: number - is the mean of X, defaults to 0
+  * sigma: number > 0 - is the standard deviation of X, defaults to 1
 * `distriprob.normal.pdfSync(x, mu, sigma)` returns the numeric probability density of X 
 where:
   * x: number - is the value of X for the desired density
-  * mu: number - is the mean of X
-  * sigma: number > 0 - is the standard deviation of X
-* `distriprob.normal.cdf(x, mu, sigma)`
-
+  * mu: number - is the mean of X, defaults to 0
+  * sigma: number > 0 - is the standard deviation of X, defaults to 1
+* `distriprob.normal.cdf(x, mu, sigma, lowerTail)` returns an ES6 promise for the numeric 
+cumulative distribution probability that X falls in the region delimited by the argument 
+values below, where:
+  * x: number - is the value of X bounding the region of accumulation for the desired 
+  cumulative distribution
+  * mu: number - is the mean of X, defaults to 0
+  * sigma: number > 0 - is the standard deviation of X, defaults to 1
+  * lowerTail: boolean - determines whether the calculated cumulative distribution is for
+all values in the lower or upper tail (those above or below the given _x_)
+* `distriprob.normal.cdfSync(x, mu, sigma)` returns the numeric cumulative distribution 
+probability that X falls in the region delimited by the argument values below, where:
+  * x: number - is the value of X bounding the region of accumulation for the desired 
+cumulative distribution
+  * mu: number - is the mean of X, defaults to 0
+  * sigma: number > 0 - is the standard deviation of X, defaults to 1
+  * lowerTail: boolean - determines whether the calculated cumulative distribution is for
+  all values in the lower or upper tail (those above or below the given _x_)
 ####Student's t
 
 ####Chi Squared
 
 ####F
 
-###Discrete Distributions ---------------------
+###Discrete Distributions 
 
 ####Binomial
 

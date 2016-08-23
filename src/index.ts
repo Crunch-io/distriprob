@@ -7,6 +7,7 @@ import * as fDist from "./impls/fDist";
 import * as binom from "./impls/binomial";
 import * as _poisson from "./impls/poisson";
 import * as hypergeo from "./impls/hypergeometric";
+import * as _gamma from "./impls/gamma";
 
 export const normal = {
   pdf: function(x, mu?, sigma?): Promise<number> {
@@ -89,6 +90,27 @@ export const F = {
   },
   quantileSync: function(p, dof1, dof2): number {
     return fDist.quantileSync(p, dof1, dof2);
+  }
+};
+
+export const gamma = {
+  pdf: function(x, shape, scale): Promise<number> {
+    return _gamma.pdf(x, shape, scale);
+  },
+  cdf: function(x, shape, scale, lowerTail = true): Promise<number> {
+    return _gamma.cdf(x, shape, scale, lowerTail);
+  },
+  quantile: function(p, shape, scale, lowerTail = true): Promise<number> {
+    return _gamma.quantile(p, shape, scale, lowerTail);
+  },
+  pdfSync: function(x, shape, scale): number {
+    return _gamma.pdfSync(x, shape, scale);
+  },
+  cdfSync: function(x, shape, scale, lowerTail = true): number {
+    return _gamma.cdfSync(x, shape, scale, lowerTail);
+  },
+  quantileSync: function(p, shape, scale, lowerTail = true): number {
+    return _gamma.quantileSync(p, shape, scale, lowerTail);
   }
 };
 
