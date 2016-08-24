@@ -31,11 +31,6 @@ export function pdf(x, degreesOfFreedom) {
 }
 
 export function cdfSync(x, degreesOfFreedom, lowerTail = true) {
-  function lessThanZeroCase(val, dof) {
-    console.log("ib:", incompleteBeta(dof/(dof + val*val), dof/2, 1/2)/2);
-    return incompleteBeta(dof/(dof + val*val), dof/2, 1/2)/2;
-  }
-
   const incompleteBetaEval = incompleteBeta(
       degreesOfFreedom/(degreesOfFreedom + x*x),
       degreesOfFreedom/2,
