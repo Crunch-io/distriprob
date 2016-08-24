@@ -1,4 +1,5 @@
 "use strict";
+import {asyncGen} from "./async";
 import * as cfs from "./continuedFractionSolver";
 import * as gamma from "./gamma";
 import * as rf from "./rootFind";
@@ -80,22 +81,6 @@ export function lnIncompleteBeta(x: number, a: number, b: number): number {
   return alnx + bln1MinusX - lna - lnBetaAB + lnContinuedFraction;
 }
 
-export function lnUpperIncompleteBeta(x: number, a: number, b: number): number {
-  return lnIncompleteBeta(1-x, b, a);
-}
-
-export function upperIncompleteBeta(x, a , b) {
-  return Math.exp(lnUpperIncompleteBeta(x, a, b));
-}
-
-export function lowerIncompleteBeta(x, a, b) {
-  function f(val) {
-    return pdfSync(val, a, b);
-  }
-
-  return di.gaussQuadrature(f, 0, x, 101);
-}
-
 export function incompleteBeta(x, a, b){
   return Math.exp(lnIncompleteBeta(x, a, b))
 }
@@ -132,6 +117,10 @@ export function pdfSync(x, alpha, beta) {
   }
 }
 
+export function pdf(x, alpha, beta) {
+  return asyncGen([lnGamma, lnBeta], pdfSync, [x, alpha, beta]);
+}
+
 export function cdfSync(x, alpha, beta, lowerTail = true) {
   if (x <= 0) {
     if (lowerTail) {
@@ -149,19 +138,68 @@ export function cdfSync(x, alpha, beta, lowerTail = true) {
     if (lowerTail) {
       return incompleteBeta(x, alpha, beta);
     } else {
-      return upperIncompleteBeta(x, alpha, beta);
-      //return incompleteBeta(1 - x, beta, alpha);
+      return incompleteBeta(1 - x, beta, alpha);
     }
   }
 }
 
-const X = 0.9999;
-const alpha = 400000;
-const beta = 5;
+export function cdf(x, alpha, beta, lowerTail = true) {
+  return asyncGen([
+    lnBeta,
+    lnGamma,
+    continuedFractionSolver,
+    d,
+    continuedFraction,
+    lnIncompleteBeta,
+    incompleteBeta
+  ], cdfSync, [x, alpha, beta, lowerTail]);
+}
 
-// console.log("pdfSync:", pdfSync(X, alpha, beta));
-// console.log("cdfSync:", cdfSync(X, alpha, beta));
-// console.log("lowerIncBeta:", lowerIncompleteBeta(X, alpha, beta));
-// console.log("1 - cdfSync:", cdfSync(X, alpha, beta, false));
-//console.log("upperIncBeta:", upperIncompleteBeta(X, alpha, beta));
-//console.log("sum:", lowerIncompleteBeta(X, alpha, beta) + upperIncompleteBeta(X, alpha, beta) );
+export function quantileSync(p, alpha, beta, lowerTail = true) {
+  function f(val) {
+    return cdfSync(val, alpha, beta, lowerTail);
+  }
+
+  function fPrime(val) {
+    if (lowerTail) {
+      return pdfSync(val, alpha, beta);
+    } else {
+      return - pdfSync(val, alpha, beta);
+    }
+  }
+
+  const mean = alpha/(alpha + beta);
+
+  if (p === 0) {
+    if (lowerTail) {
+      return 0;
+    } else {
+      return 1;
+    }
+  } else if (p === 1) {
+    if (lowerTail) {
+      return 1;
+    } else {
+      return 0
+    }
+  } else {
+    return rootFind(f, fPrime, p, mean, 1, 0);
+  }
+}
+
+export function quantile(x, alpha, beta, lowerTail = true) {
+  return asyncGen([
+    rf.newton,
+    rf.bisection,
+    rootFind,
+    lnBeta,
+    lnGamma,
+    continuedFractionSolver,
+    d,
+    continuedFraction,
+    lnIncompleteBeta,
+    incompleteBeta,
+    pdfSync,
+    cdfSync
+  ], quantileSync, [x, alpha, beta, lowerTail]);
+}

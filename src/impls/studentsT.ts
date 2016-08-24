@@ -93,9 +93,3 @@ export function quantile(p, degreesOfFreedom, lowerTail = true) {
     cdfSync
   ], quantileSync, [p, degreesOfFreedom, lowerTail]);
 }
-
-cdf(30000, 4, false).then((result) => {
-  console.log("cdf:", result);
-});
-
-console.log("cdfSync:", cdfSync(-300000, 4, true));

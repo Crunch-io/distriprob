@@ -10,6 +10,7 @@ import * as hypergeo from "./impls/hypergeometric";
 import * as _gamma from "./impls/gamma";
 import * as exp from "./impls/exponential";
 import * as _uniform from "./impls/uniform";
+import * as _beta from "./impls/beta";
 
 export const uniform = {
   pdf: function(x, lowerSupportBound, upperSupportBound): Promise<number> {
@@ -159,6 +160,27 @@ export const gamma = {
   quantileSync: function(p, shape, scale, lowerTail = true): number {
     return _gamma.quantileSync(p, shape, scale, lowerTail);
   }
+};
+
+export const beta = {
+  pdf: function(x, alpha, beta): Promise<number> {
+    return _beta.pdf(x, alpha, beta);
+  },
+  cdf: function(x, alpha, beta, lowerTail = true): Promise<number> {
+    return _beta.cdf(x, alpha, beta, lowerTail);
+  },
+  quantile: function(x, alpha, beta, lowerTail = true): Promise<number> {
+    return _beta.quantile(x, alpha, beta, lowerTail);
+  },
+  pdfSync: function(x, alpha, beta): number {
+    return _beta.pdfSync(x, alpha, beta);
+  },
+  cdfSync: function(x, alpha, beta, lowerTail = true): number {
+    return _beta.cdfSync(x, alpha, beta, lowerTail);
+  },
+  quantileSync: function(x, alpha, beta, lowerTail = true): number {
+    return _beta.quantileSync(x, alpha, beta, lowerTail);
+  },
 };
 
 export const binomial = {
