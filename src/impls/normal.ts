@@ -51,18 +51,10 @@ export function cdfSync(x, mu, sigma, lowerTail = true) {
     return (1/2) * (1 + lowerIncompleteGamma((val*val)/2, 1/2));
   }
 
-  if (z >= 0) {
-    if (lowerTail) {
-      return (1/2) + (lowerIncompleteGamma((x*x)/2, 1/2)/2);
-    } else {
-      return upperIncompleteGamma((x*x)/2, 1/2)/2;
-    }
+  if ((z >= 0 && lowerTail) || (z < 0 && !lowerTail)) {
+    return (1/2) + (lowerIncompleteGamma((x*x)/2, 1/2)/2);
   } else {
-    if (lowerTail) {
-      return upperIncompleteGamma((x*x)/2, 1/2)/2;
-    } else {
-      return  (1/2) + (lowerIncompleteGamma((x*x)/2, 1/2)/2);
-    }
+    return upperIncompleteGamma((x*x)/2, 1/2)/2;
   }
 }
 
