@@ -1,9 +1,5 @@
 "use strict";
 
-/**
- * Created by zacharymartin on August 23, 2016.
- */
-
 export function pdfSync(x, lowerSupportBound, upperSupportBound) {
   if (x < lowerSupportBound || x > upperSupportBound) {
     return 0;

@@ -69,7 +69,21 @@ export function quantileSync(p, lambda, lowerTail = true) {
   }
   const mean = 1/lambda;
 
-  return rootFind(f, fPrime, p, mean, null, 0);
+  if (p === 0) {
+    if (lowerTail) {
+      return 0;
+    } else {
+      return Number.POSITIVE_INFINITY;
+    }
+  } else if (p === 1) {
+    if (lowerTail) {
+      return Number.POSITIVE_INFINITY;
+    } else {
+      return 0;
+    }
+  } else {
+    return rootFind(f, fPrime, p, mean, null, 0);
+  }
 }
 
 export function quantile(p, lambda, lowerTail = true) {
