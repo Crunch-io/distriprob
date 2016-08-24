@@ -27,24 +27,26 @@ export function pdfSync(x, dof1, dof2) {
 }
 
 export function pdf(x, dof1, dof2) {
-  function script(a, b, c) {
-    return pdfSync(a, b, c)
-  }
-  return asyncGen([beta.lnBeta, gamma.lnGamma, pdfSync], script, [x, dof1, dof2]);
+  return asyncGen([beta.lnBeta, gamma.lnGamma,], pdfSync, [x, dof1, dof2]);
 }
 
-export function cdfSync(x, dof1, dof2) {
+export function cdfSync(x, dof1, dof2, lowerTail = true) {
   if (x <= 0) {
-    return 0;
+    if (lowerTail) {
+      return 0;
+    } else {
+      return 1;
+    }
   } else {
-    return 1 - incompleteBeta(dof2/(dof2 + (dof1 * x)), dof2/2, dof1/2);
+    if (lowerTail) {
+      return incompleteBeta((dof1 * x)/(dof2 + (dof1 * x)), dof1/2, dof2/2);
+    } else {
+      return incompleteBeta(dof2/(dof2 + (dof1 * x)), dof2/2, dof1/2)
+    }
   }
 }
 
-export function cdf(x, dof1, dof2) {
-  function script(a, b, c) {
-    return cdfSync(a, b, c)
-  }
+export function cdf(x, dof1, dof2, lowerTail = true) {
   return asyncGen([
     beta.lnBeta,
     gamma.lnGamma,
@@ -52,12 +54,11 @@ export function cdf(x, dof1, dof2) {
     beta.d,
     beta.continuedFraction,
     beta.lnIncompleteBeta,
-    beta.incompleteBeta,
-    cdfSync
-  ], script, [x, dof1, dof2]);
+    beta.incompleteBeta
+  ], cdfSync, [x, dof1, dof2, lowerTail]);
 }
 
-export function quantileSync(p, dof1, dof2) {
+export function quantileSync(p, dof1, dof2, lowerTail = true) {
   function f(val) {
     return cdfSync(val, dof1, dof2);
   }
@@ -66,13 +67,24 @@ export function quantileSync(p, dof1, dof2) {
     return pdfSync(val, dof1, dof2);
   }
 
-  return rootFind(f, fPrime, p, 1, null, 0);
+  if (p === 0) {
+    if (lowerTail) {
+      return 0;
+    } else {
+      return Number.POSITIVE_INFINITY;
+    }
+  } else if (p === 1) {
+    if (lowerTail) {
+      return Number.POSITIVE_INFINITY;
+    } else {
+      return 0;
+    }
+  } else {
+    return rootFind(f, fPrime, p, 1, null, 0);
+  }
 }
 
-export function quantile(p, dof1, dof2) {
-  function script(a, b, c) {
-    return quantileSync(a, b, c)
-  }
+export function quantile(p, dof1, dof2, lowerTail = true) {
   return asyncGen([
     rf.newton,
     rf.bisection,
@@ -85,8 +97,7 @@ export function quantile(p, dof1, dof2) {
     beta.lnIncompleteBeta,
     beta.incompleteBeta,
     pdfSync,
-    cdfSync,
-    quantileSync
-  ], script, [p, dof1, dof2]);
+    cdfSync
+  ], quantileSync, [p, dof1, dof2, lowerTail]);
 }
 

@@ -103,20 +103,20 @@ export const F = {
   pdf: function(x, dof1, dof2): Promise<number> {
     return fDist.pdf(x, dof1, dof2);
   },
-  cdf: function(x, dof1, dof2): Promise<number> {
-    return fDist.cdf(x, dof1, dof2);
+  cdf: function(x, dof1, dof2, lowerTail = true): Promise<number> {
+    return fDist.cdf(x, dof1, dof2, lowerTail);
   },
-  quantile: function(p, dof1, dof2): Promise<number> {
-    return fDist.quantile(p, dof1, dof2);
+  quantile: function(p, dof1, dof2, lowerTail = true): Promise<number> {
+    return fDist.quantile(p, dof1, dof2, lowerTail);
   },
   pdfSync: function(x, dof1, dof2): number {
     return fDist.pdfSync(x, dof1, dof2);
   },
-  cdfSync: function(x, dof1, dof2): number {
-    return fDist.cdfSync(x, dof1, dof2);
+  cdfSync: function(x, dof1, dof2, lowerTail = true): number {
+    return fDist.cdfSync(x, dof1, dof2, lowerTail);
   },
-  quantileSync: function(p, dof1, dof2): number {
-    return fDist.quantileSync(p, dof1, dof2);
+  quantileSync: function(p, dof1, dof2, lowerTail = true): number {
+    return fDist.quantileSync(p, dof1, dof2, lowerTail);
   }
 };
 
