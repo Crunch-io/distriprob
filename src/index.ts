@@ -208,20 +208,20 @@ export const poisson = {
   pdf: function(k, lambda): Promise<number> {
     return _poisson.pmf(k, lambda);
   },
-  cdf: function(k, lambda): Promise<number> {
-    return _poisson.cdf(k, lambda);
+  cdf: function(k, lambda, lowerTail = true): Promise<number> {
+    return _poisson.cdf(k, lambda, lowerTail);
   },
-  quantile: function(p, lambda): Promise<number> {
-    return _poisson.quantile(p, lambda);
+  quantile: function(p, lambda, lowerTail = true): Promise<number> {
+    return _poisson.quantile(p, lambda, lowerTail);
   },
   pdfSync: function(k, lambda): number {
     return _poisson.pmfSync(k, lambda);
   },
-  cdfSync: function(k, lambda): number {
-    return _poisson.cdfSync(k, lambda);
+  cdfSync: function(k, lambda, lowerTail = true): number {
+    return _poisson.cdfSync(k, lambda, lowerTail);
   },
-  quantileSync: function(p, lambda): number {
-    return _poisson.quantileSync(p, lambda);
+  quantileSync: function(p, lambda, lowerTail = true): number {
+    return _poisson.quantileSync(p, lambda, lowerTail);
   }
 };
 

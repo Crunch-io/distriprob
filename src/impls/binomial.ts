@@ -133,22 +133,5 @@ export function quantile(p, n, probSuccess, lowerTail = true) {
   ], quantileSync, [p, n, probSuccess, lowerTail]);
 }
 
-// console.log("pmfSync:", pmfSync(2, 1000, 0.2));
-// console.log("cdfSync:", cdfSync(310.745, 1000, 0.2, false));
-
-// pmf(2, 1000, 0.2).then((result) => {
-//   console.log("pmf:", result);
-// });
-
-// cdf(2, 1000, 0.2, false).then((result) => {
-//   console.log("cdf:", result);
-// });
-
-quantile(1, 10, 0.2, true).then((result) => {
-  console.log("cdf:", result);
-});
-
-console.log("quantileSync:", quantileSync(0.5, 10, 0.2, false));
-
 
 

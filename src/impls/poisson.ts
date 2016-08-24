@@ -10,6 +10,7 @@ const continuedFractionSolver = cfs.continuedFractionSolver;
 const lnGamma = gamma.lnGamma;
 const lnFactorial = gamma.lnFactorial;
 const lowerIncompleteGamma = gamma.lowerIncompleteGamma;
+const upperIncompleteGamma = gamma.upperIncompleteGamma;
 const lnUpperIncompleteGammaB = gamma.lnUpperIncompleteGammaB;
 const discreteQuantileFind = rf.discreteQuantileFind;
 
@@ -22,27 +23,30 @@ export function pmfSync(k, lambda) {
 }
 
 export function pmf(k, lambda) {
-  function script(a,b) {
-    return pmfSync(a, b)
-  }
-  return asyncGen([lnGamma, lnFactorial, pmfSync], script, [k, lambda]);
+  return asyncGen([lnGamma, lnFactorial ], pmfSync, [k, lambda]);
 }
 
 
-export function cdfSync(k, lambda) {
-  // TODO: check into slow computation of lowerIncompleteGamma for large lambda
-  let result = 1 - lowerIncompleteGamma(lambda, k + 1);
-  if (result === 0) {
-    result = Math.exp(lnUpperIncompleteGammaB(lambda, k + 1));
+export function cdfSync(k, lambda, lowerTail = true) {
+  if (k < 0) {
+    if (lowerTail) {
+      return 0;
+    } else {
+      return 1;
+    }
+  } else {
+    k = Math.floor(k);
+
+    // TODO: check into slow computation of lowerIncompleteGamma for large lambda
+    if (lowerTail) {
+      return upperIncompleteGamma(lambda, k + 1);
+    } else {
+      return lowerIncompleteGamma(lambda, k + 1);
+    }
   }
-  return result;
 }
 
-export function cdf(k, lambda) {
-  function script(a, b) {
-    return cdfSync(a, b);
-  }
-
+export function cdf(k, lambda, lowerTail = true) {
   return asyncGen([
     continuedFractionSolver,
     gamma.lnGamma,
@@ -50,23 +54,37 @@ export function cdf(k, lambda) {
     gamma.lnLowerIncompleteGammaA,
     gamma.lnUpperIncompleteGammaB,
     gamma.lnLowerIncompleteGamma,
+    gamma.lnUpperIncompleteGamma,
     gamma.lowerIncompleteGamma,
-    cdfSync
-  ], script, [k, lambda]);
+    gamma.upperIncompleteGamma
+  ], cdfSync, [k, lambda, lowerTail]);
 }
 
-export function quantileSync(p, lambda) {
-  function simplifiedCDF(val) {
-    return cdfSync(val, lambda);
+export function quantileSync(p, lambda, lowerTail = true) {
+  if (p === 0) {
+    if (lowerTail) {
+      return 0;
+    } else {
+      return Number.POSITIVE_INFINITY;
+    }
+  } else if (p === 1) {
+    if (lowerTail) {
+      return Number.POSITIVE_INFINITY;
+    } else {
+      return 0;
+    }
+  } else {
+    function simplifiedCDF(val) {
+      return cdfSync(val, lambda, lowerTail);
+    }
+
+    const mean = lambda;
+
+    return discreteQuantileFind(simplifiedCDF, p, null, 0, mean, lowerTail);
   }
-  return discreteQuantileFind(simplifiedCDF, p, null, 0, lambda);
 }
 
-export function quantile(p, lambda) {
-  function script(a, b) {
-    return quantileSync(a, b);
-  }
-
+export function quantile(p, lambda, lowerTail = true) {
   return asyncGen([
     discreteQuantileFind,
     continuedFractionSolver,
@@ -75,8 +93,9 @@ export function quantile(p, lambda) {
     gamma.lnLowerIncompleteGammaA,
     gamma.lnUpperIncompleteGammaB,
     gamma.lnLowerIncompleteGamma,
+    gamma.lnUpperIncompleteGamma,
     gamma.lowerIncompleteGamma,
-    cdfSync,
-    quantileSync
-  ], script, [p, lambda]);
+    gamma.upperIncompleteGamma,
+    cdfSync
+  ], quantileSync, [p, lambda, lowerTail]);
 }
