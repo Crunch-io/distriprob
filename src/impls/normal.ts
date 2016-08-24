@@ -7,6 +7,7 @@ import {asyncGen} from "./async";
 // This import and then renaming of imports is necessary to allow the async module to
 // correctly generate web worker scripts.
 const lowerIncompleteGamma = gamma.lowerIncompleteGamma;
+const upperIncompleteGamma = gamma.upperIncompleteGamma;
 const rootFind = rf.rootFind;
 
 
@@ -35,7 +36,7 @@ export function pdf(x, mu, sigma) {
 }
 
 
-export function cdfSync(x, mu, sigma) {
+export function cdfSync(x, mu, sigma, lowerTail = true) {
   if (!mu) {
     mu = 0;
   }
@@ -51,17 +52,21 @@ export function cdfSync(x, mu, sigma) {
   }
 
   if (z >= 0) {
-    return nonNegativeCase(z);
+    if (lowerTail) {
+      return (1/2) + (lowerIncompleteGamma((x*x)/2, 1/2)/2);
+    } else {
+      return upperIncompleteGamma((x*x)/2, 1/2)/2;
+    }
   } else {
-    return 1 - nonNegativeCase(-z);
+    if (lowerTail) {
+      return upperIncompleteGamma((x*x)/2, 1/2)/2;
+    } else {
+      return  (1/2) + (lowerIncompleteGamma((x*x)/2, 1/2)/2);
+    }
   }
 }
 
-export function cdf(x, mu, sigma) {
-  function script(a,b,c) {
-    return cdfSync(a, b, c);
-  }
-
+export function cdf(x, mu, sigma, lowerTail = true) {
   return asyncGen([
     continuedFractionSolver,
     gamma.lnGamma,
@@ -70,17 +75,21 @@ export function cdf(x, mu, sigma) {
     gamma.lnUpperIncompleteGammaB,
     gamma.lnLowerIncompleteGamma,
     gamma.lowerIncompleteGamma,
-    cdfSync
-  ], script, [x, mu, sigma]);
+    gamma.upperIncompleteGamma
+  ], cdfSync, [x, mu, sigma, lowerTail]);
 }
 
-export function quantileSync(p, mu, sigma) {
+export function quantileSync(p, mu, sigma, lowerTail = true) {
   function f (val) {
     return cdfSync(val, 0, 1);
   }
 
   function fPrime(val) {
-    return pdfSync(val, 0, 1);
+    if (lowerTail) {
+      return pdfSync(val, 0, 1);
+    } else {
+      return - pdfSync(val, 0, 1);
+    }
   }
 
   let z = rootFind(f, fPrime, p, 0, null, null);
@@ -88,11 +97,7 @@ export function quantileSync(p, mu, sigma) {
   return (z * sigma) + mu;
 }
 
-export function quantile(p, mu, sigma) {
-  function script(a,b,c) {
-    return quantileSync(a, b, c);
-  }
-
+export function quantile(p, mu, sigma, lowerTail) {
   return asyncGen([
     rf.newton,
     rf.bisection,
@@ -104,8 +109,8 @@ export function quantile(p, mu, sigma) {
     gamma.lnUpperIncompleteGammaB,
     gamma.lnLowerIncompleteGamma,
     gamma.lowerIncompleteGamma,
+    gamma.upperIncompleteGamma,
     pdfSync,
-    cdfSync,
-    quantileSync
-  ], script, [p, mu, sigma]);
+    cdfSync
+  ], quantileSync, [p, mu, sigma, lowerTail]);
 }

@@ -5,7 +5,6 @@ export function rootFind(fctn, derivativeFctn, value, initialRootEstimate, max, 
   var root = newton(fctn, derivativeFctn, value, initialRootEstimate, max, min);
 
   if (root === "non-convergent") {
-    console.log("non-convergent");
     root = bisection(fctn, value, max, min);
   }
 
