@@ -84,12 +84,26 @@ export function quantileSync(p, mu, sigma, lowerTail = true) {
     }
   }
 
-  let z = rootFind(f, fPrime, p, 0, null, null);
+  if (p === 0) {
+    if (lowerTail) {
+      return Number.NEGATIVE_INFINITY;
+    } else {
+      return Number.POSITIVE_INFINITY;
+    }
+  } else if (p === 1) {
+    if (lowerTail) {
+      return Number.POSITIVE_INFINITY;
+    } else {
+      return Number.NEGATIVE_INFINITY;
+    }
+  } else {
+    let z = rootFind(f, fPrime, p, 0, null, null);
 
-  return (z * sigma) + mu;
+    return (z * sigma) + mu;
+  }
 }
 
-export function quantile(p, mu, sigma, lowerTail) {
+export function quantile(p, mu, sigma, lowerTail = true) {
   return asyncGen([
     rf.newton,
     rf.bisection,

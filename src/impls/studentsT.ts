@@ -24,10 +24,7 @@ export function pdfSync(x, degreesOfFreedom) {
 }
 
 export function pdf(x, degreesOfFreedom) {
-  function script(a,b) {
-    return pdfSync(a, b)
-  }
-  return asyncGen([beta.lnBeta, gamma.lnGamma, pdfSync], script, [x, degreesOfFreedom]);
+  return asyncGen([beta.lnBeta, gamma.lnGamma], pdfSync, [x, degreesOfFreedom]);
 }
 
 export function cdfSync(x, degreesOfFreedom, lowerTail = true) {
@@ -69,7 +66,21 @@ export function quantileSync(p, degreesOfFreedom, lowerTail = true) {
     }
   }
 
-  return rootFind(f, fPrime, p, 0, null, null);
+  if (p === 0) {
+    if (lowerTail) {
+      return Number.NEGATIVE_INFINITY;
+    } else {
+      return Number.POSITIVE_INFINITY;
+    }
+  } else if (p === 1) {
+    if (lowerTail) {
+      return Number.POSITIVE_INFINITY;
+    } else {
+      return Number.NEGATIVE_INFINITY;
+    }
+  } else {
+    return rootFind(f, fPrime, p, 0, null, null);
+  }
 }
 
 export function quantile(p, degreesOfFreedom, lowerTail = true) {

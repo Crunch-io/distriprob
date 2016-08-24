@@ -7,6 +7,7 @@ import {asyncGen} from "./async";
 // This import and then renaming of imports is necessary to allow the async module to
 // correctly generate web worker scripts.
 const lowerIncompleteGamma = gamma.lowerIncompleteGamma;
+const upperIncompleteGamma = gamma.upperIncompleteGamma;
 const lnGamma = gamma.lnGamma;
 const rootFind = rf.rootFind;
 
@@ -24,25 +25,26 @@ export function pdfSync(x, degreesOfFreedom) {
 }
 
 export function pdf(x, degreesOfFreedom) {
-  function script(a,b) {
-    return pdfSync(a, b)
-  }
-  return asyncGen([lnGamma, pdfSync], script, [x, degreesOfFreedom]);
+  return asyncGen([lnGamma, pdfSync], pdfSync, [x, degreesOfFreedom]);
 }
 
-export function cdfSync(x, degreesOfFreedom) {
+export function cdfSync(x, degreesOfFreedom, lowerTail = true) {
   if (x <= 0) {
-    return 0;
+    if (lowerTail) {
+      return 0;
+    } else {
+      return 1;
+    }
   } else {
-    return lowerIncompleteGamma(x/2, degreesOfFreedom/2);
+    if (lowerTail) {
+      return lowerIncompleteGamma(x/2, degreesOfFreedom/2);
+    } else {
+      return upperIncompleteGamma(x/2, degreesOfFreedom/2);
+    }
   }
 }
 
-export function cdf(x, degreesOfFreedom) {
-  function script(a, b) {
-    return cdfSync(a, b);
-  }
-
+export function cdf(x, degreesOfFreedom, lowerTail = true) {
   return asyncGen([
     continuedFractionSolver,
     gamma.lnGamma,
@@ -50,12 +52,11 @@ export function cdf(x, degreesOfFreedom) {
     gamma.lnLowerIncompleteGammaA,
     gamma.lnUpperIncompleteGammaB,
     gamma.lnLowerIncompleteGamma,
-    gamma.lowerIncompleteGamma,
-    cdfSync
-  ], script, [x, degreesOfFreedom]);
+    gamma.lowerIncompleteGamma
+  ], cdfSync, [x, degreesOfFreedom, lowerTail]);
 }
 
-export function quantileSync(p, degreesOfFreedom) {
+export function quantileSync(p, degreesOfFreedom, lowerTail = true) {
   function f(val) {
     return cdfSync(val, degreesOfFreedom);
   }
@@ -64,14 +65,24 @@ export function quantileSync(p, degreesOfFreedom) {
     return pdfSync(val, degreesOfFreedom);
   }
 
-  return rootFind(f, fPrime, p, 1, null, 0);
+  if (p === 0) {
+    if (lowerTail) {
+      return 0;
+    } else {
+      return Number.POSITIVE_INFINITY;
+    }
+  } else if (p === 1) {
+    if (lowerTail) {
+      return Number.POSITIVE_INFINITY;
+    } else {
+      return 0;
+    }
+  } else {
+    return rootFind(f, fPrime, p, 1, null, 0);
+  }
 }
 
-export function quantile(p, degreesOfFreedom) {
-  function script(a, b) {
-    return quantileSync(a, b);
-  }
-
+export function quantile(p, degreesOfFreedom, lowerTail = true) {
   return asyncGen([
     rf.newton,
     rf.bisection,
@@ -84,7 +95,6 @@ export function quantile(p, degreesOfFreedom) {
     gamma.lnLowerIncompleteGamma,
     gamma.lowerIncompleteGamma,
     pdfSync,
-    cdfSync,
-    quantileSync
-  ], script, [p, degreesOfFreedom]);
+    cdfSync
+  ], quantileSync, [p, degreesOfFreedom, lowerTail]);
 }

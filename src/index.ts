@@ -40,20 +40,20 @@ export const normal = {
   pdf: function(x, mu?, sigma?): Promise<number> {
     return _normal.pdf(x, mu, sigma);
   },
-  cdf: function(x, mu?, sigma?): Promise<number> {
-    return _normal.cdf(x, mu, sigma);
+  cdf: function(x, mu?, sigma?, lowerTail = true): Promise<number> {
+    return _normal.cdf(x, mu, sigma, lowerTail);
   },
-  quantile: function(p, mu?, sigma?): Promise<number> {
-    return _normal.quantile(p, mu, sigma);
+  quantile: function(p, mu?, sigma?, lowerTail = true): Promise<number> {
+    return _normal.quantile(p, mu, sigma, lowerTail);
   },
   pdfSync: function(x, mu?, sigma?): number {
     return _normal.pdfSync(x, mu, sigma);
   },
-  cdfSync: function(x, mu?, sigma?): number {
-    return _normal.cdfSync(x, mu, sigma);
+  cdfSync: function(x, mu?, sigma?, lowerTail = true): number {
+    return _normal.cdfSync(x, mu, sigma, lowerTail);
   },
-  quantileSync: function(p, mu?, sigma?): number {
-    return _normal.quantileSync(p, mu, sigma);
+  quantileSync: function(p, mu?, sigma?, lowerTail = true): number {
+    return _normal.quantileSync(p, mu, sigma, lowerTail);
   }
 };
 
@@ -61,20 +61,20 @@ export const t = {
   pdf: function(x, degreesOfFreedom): Promise<number> {
     return studentsT.pdf(x, degreesOfFreedom);
   },
-  cdf: function(x, degreesOfFreedom): Promise<number> {
-    return studentsT.cdf(x, degreesOfFreedom);
+  cdf: function(x, degreesOfFreedom, lowerTail = true): Promise<number> {
+    return studentsT.cdf(x, degreesOfFreedom, lowerTail);
   },
-  quantile: function(p, degreesOfFreedom): Promise<number> {
-    return studentsT.quantile(p, degreesOfFreedom);
+  quantile: function(p, degreesOfFreedom, lowerTail = true): Promise<number> {
+    return studentsT.quantile(p, degreesOfFreedom, lowerTail);
   },
   pdfSync: function(x, degreesOfFreedom): number {
     return studentsT.pdfSync(x, degreesOfFreedom);
   },
-  cdfSync: function(x, degreesOfFreedom): number {
-    return studentsT.cdfSync(x, degreesOfFreedom);
+  cdfSync: function(x, degreesOfFreedom, lowerTail = true): number {
+    return studentsT.cdfSync(x, degreesOfFreedom, lowerTail);
   },
-  quantileSync: function(p, degreesOfFreedom): number {
-    return studentsT.quantileSync(p, degreesOfFreedom);
+  quantileSync: function(p, degreesOfFreedom, lowerTail = true): number {
+    return studentsT.quantileSync(p, degreesOfFreedom, lowerTail);
   }
 };
 
