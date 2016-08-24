@@ -61,7 +61,7 @@ export function quantileSync(p, degreesOfFreedom, lowerTail = true) {
     return cdfSync(val, degreesOfFreedom);
   }
 
-  function fprime(val) {
+  function fPrime(val) {
     if (lowerTail) {
       return pdfSync(val, degreesOfFreedom);
     } else {
@@ -69,7 +69,7 @@ export function quantileSync(p, degreesOfFreedom, lowerTail = true) {
     }
   }
 
-  return rootFind(f, fprime, p, 0, null, null);
+  return rootFind(f, fPrime, p, 0, null, null);
 }
 
 export function quantile(p, degreesOfFreedom, lowerTail = true) {
