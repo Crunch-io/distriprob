@@ -187,20 +187,20 @@ export const binomial = {
   pdf: function(k, n, probSuccess): Promise<number> {
     return binom.pmf(k, n, probSuccess);
   },
-  cdf: function(k, n, probSuccess): Promise<number> {
-    return binom.cdf(k, n, probSuccess);
+  cdf: function(k, n, probSuccess, lowerTail = true): Promise<number> {
+    return binom.cdf(k, n, probSuccess, lowerTail);
   },
-  quantile: function(p, n, probSuccess): Promise<number> {
-    return binom.quantile(p, n, probSuccess);
+  quantile: function(p, n, probSuccess, lowerTail = true): Promise<number> {
+    return binom.quantile(p, n, probSuccess, lowerTail);
   },
   pdfSync: function(k, n, probSuccess): number {
     return binom.pmfSync(k, n, probSuccess);
   },
-  cdfSync: function(k, n, probSuccess): number {
-    return binom.cdfSync(k, n, probSuccess);
+  cdfSync: function(k, n, probSuccess, lowerTail = true): number {
+    return binom.cdfSync(k, n, probSuccess, lowerTail);
   },
-  quantileSync: function(p, n, probSuccess): number {
-    return binom.quantileSync(p, n, probSuccess);
+  quantileSync: function(p, n, probSuccess, lowerTail = true): number {
+    return binom.quantileSync(p, n, probSuccess, lowerTail);
   }
 };
 

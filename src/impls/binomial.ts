@@ -4,6 +4,7 @@ import * as gamma from "./gamma";
 import * as beta from "./beta";
 import * as rf from "./rootFind";
 import * as cfs from "./continuedFractionSolver";
+import * as pf from "./primeFactors";
 import {asyncGen} from "./async";
 
 // This import and then renaming of imports is necessary to allow the async module to
@@ -13,7 +14,7 @@ const lnFactorial = gamma.lnFactorial;
 const incompleteBeta = beta.incompleteBeta;
 const discreteQuantileFind = rf.discreteQuantileFind;
 const continuedFractionSolver = cfs.continuedFractionSolver;
-
+const lnFactorialFractionEval = pf.lnFactorialFractionEval;
 
 export function lnBinomialCoefficient(n, chooseK) {
   if (typeof n !== "number" || typeof chooseK !== "number") {
@@ -32,39 +33,58 @@ export function lnBinomialCoefficient(n, chooseK) {
   }
 
   if (chooseK === 0 || chooseK === n) {
-    return 1
+    return 0;
   }
 
-  return lnFactorial(n) - (lnFactorial(chooseK) + lnFactorial(n-chooseK));
+  return lnFactorialFractionEval([n], [chooseK, n-chooseK]);
 }
 
 export function pmfSync(k, n, probSuccess) {
   const p = probSuccess;
-  return Math.exp(
-    lnBinomialCoefficient(n, k) + (k * Math.log(p)) + ((n-k) * Math.log(1 - p,))
-  );
+
+  if (!Number.isInteger(k) || k < 0 || k > n) {
+    return 0
+  } else {
+    return Math.exp(
+      lnBinomialCoefficient(n, k) + (k * Math.log(p)) + ((n-k) * Math.log(1 - p,))
+    );
+  }
 }
 
 export function pmf(k, n, probSuccess) {
-  function script(a,b,c) {
-    return pmfSync(a, b, c);
-  }
   return asyncGen([
-    lnGamma,
-    lnFactorial,
-    lnBinomialCoefficient,
-    pmfSync
-  ], script, [k, n, probSuccess]);
+    pf.primesLessThanOrEqualTo,
+    pf._factorialPrimes,
+    pf.factorialPrimes,
+    lnFactorialFractionEval,
+    lnBinomialCoefficient
+  ], pmfSync, [k, n, probSuccess]);
 }
 
-export function cdfSync(k, n, probSuccess) {
-  return 1 - incompleteBeta(probSuccess, k + 1, n - k);
-}
-
-export function cdf(k, n, probSuccess) {
-  function script(a, b, c) {
-    return cdfSync(a, b, c)
+export function cdfSync(k, n, probSuccess, lowerTail = true) {
+  if (k < 0) {
+    if (lowerTail) {
+      return 0;
+    } else {
+      return 1;
+    }
+  } else if (k > n) {
+    if (lowerTail) {
+      return 1;
+    } else {
+      return 0;
+    }
+  } else {
+    k = Math.floor(k);
+    if (lowerTail) {
+      return incompleteBeta(1 - probSuccess, n - k, k + 1);
+    } else {
+      return incompleteBeta(probSuccess, k + 1, n - k)
+    }
   }
+}
+
+export function cdf(k, n, probSuccess, lowerTail = true) {
   return asyncGen([
     beta.lnBeta,
     gamma.lnGamma,
@@ -72,28 +92,34 @@ export function cdf(k, n, probSuccess) {
     beta.d,
     beta.continuedFraction,
     beta.lnIncompleteBeta,
-    beta.incompleteBeta,
-    cdfSync
-  ], script, [k, n, probSuccess]);
+    beta.incompleteBeta
+  ], cdfSync, [k, n, probSuccess, lowerTail]);
 }
 
-export function quantileSync(p, n, probSuccess) {
+export function quantileSync(p, n, probSuccess, lowerTail = true) {
   function simplifiedCDF(val) {
-    return cdfSync(val, n, probSuccess);
+    return cdfSync(val, n, probSuccess, lowerTail);
   }
   if (p === 0) {
-    return 0;
+    if (lowerTail) {
+      return 0;
+    } else {
+      return n;
+    }
   } else if (p === 1) {
-    return n;
+    if (lowerTail) {
+      return n;
+    } else {
+      return 0;
+    }
   } else {
-    return discreteQuantileFind(simplifiedCDF, p, n, 0);
+    const mean = Math.floor(n*p);
+
+    return discreteQuantileFind(simplifiedCDF, p, n, 0, mean, lowerTail);
   }
 }
 
-export function quantile(p, n, probSuccess) {
-  function script(a, b, c) {
-    return quantileSync(a, b, c)
-  }
+export function quantile(p, n, probSuccess, lowerTail = true) {
   return asyncGen([
     discreteQuantileFind,
     beta.lnBeta,
@@ -103,12 +129,26 @@ export function quantile(p, n, probSuccess) {
     beta.continuedFraction,
     beta.lnIncompleteBeta,
     beta.incompleteBeta,
-    cdfSync,
-    quantileSync
-  ], script, [p, n, probSuccess]);
+    cdfSync
+  ], quantileSync, [p, n, probSuccess, lowerTail]);
 }
 
+// console.log("pmfSync:", pmfSync(2, 1000, 0.2));
+// console.log("cdfSync:", cdfSync(310.745, 1000, 0.2, false));
 
+// pmf(2, 1000, 0.2).then((result) => {
+//   console.log("pmf:", result);
+// });
+
+// cdf(2, 1000, 0.2, false).then((result) => {
+//   console.log("cdf:", result);
+// });
+
+quantile(1, 10, 0.2, true).then((result) => {
+  console.log("cdf:", result);
+});
+
+console.log("quantileSync:", quantileSync(0.5, 10, 0.2, false));
 
 
 

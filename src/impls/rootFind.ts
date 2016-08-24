@@ -116,9 +116,10 @@ export function bisection(fctn, value, max, min){
 }
 
 
-export function discreteQuantileFind(simplifiedCDF, p, max, min, initialEstimate = 0) {
+export function discreteQuantileFind(simplifiedCDF, p, max, min, initialEstimate = 0, lowerTail = true) {
   if (max === null) {
-    // find a value of max where cdf(max) > value
+    // find a value of max where cdf(max) >= p for lowerTail === true and cdf(max) <= p
+    // for lowerTail === false
     let offset = 0.5;
     let cdfVal;
 
@@ -127,7 +128,7 @@ export function discreteQuantileFind(simplifiedCDF, p, max, min, initialEstimate
       max = initialEstimate + offset;
       cdfVal = simplifiedCDF(max);
 
-      if (cdfVal < p){
+      if ((cdfVal < p && lowerTail) || (cdfVal > p && !lowerTail)){
         if (min === null || min < max) {
           min = max;
         }
@@ -137,7 +138,8 @@ export function discreteQuantileFind(simplifiedCDF, p, max, min, initialEstimate
     } while (true);
   }
   if (min === null) {
-    // find a value of min where cdf(min) < value
+    // find a value of min where cdf(min) < p for lowerTail === true and cdf(min) > p
+    // for lowerTail === true
     let offset = 0.5;
     let cdfVal;
 
@@ -145,7 +147,13 @@ export function discreteQuantileFind(simplifiedCDF, p, max, min, initialEstimate
       offset *= 2;
       min = initialEstimate - offset;
       cdfVal = simplifiedCDF(min);
-    } while (cdfVal >= p);
+    } while ((cdfVal >= p && lowerTail) || (cdfVal <= p && !lowerTail));
+  }
+
+  // check that min doesn't satisfy requirements
+  let cdfMin = simplifiedCDF(min);
+  if ((cdfMin >= p && lowerTail) || (cdfMin <= p && !lowerTail)) {
+    return min;
   }
 
   let center;
@@ -167,9 +175,9 @@ export function discreteQuantileFind(simplifiedCDF, p, max, min, initialEstimate
       center = centerFloor;
     }
 
-    let cdfVal = simplifiedCDF(center);
+    let cdfValCenter = simplifiedCDF(center);
 
-    if (simplifiedCDF(center) >= p) {
+    if ((cdfValCenter >= p && lowerTail) || (cdfValCenter <= p && !lowerTail)) {
       max = center;
     } else {
       min = center;

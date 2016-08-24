@@ -36,7 +36,7 @@ export function primesLessThanOrEqualTo(n): number[] {
 }
 
 export function _factorialPrimes(n) {
-  if (n === 1) {
+  if (n === 0 || n === 1) {
     return {};
   } else {
     const result: {[prime: number]: number} = {};
