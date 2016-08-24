@@ -82,20 +82,20 @@ export const chi2 = {
   pdf: function(x, degreesOfFreedom): Promise<number> {
     return chiSquared.pdf(x, degreesOfFreedom);
   },
-  cdf: function(x, degreesOfFreedom): Promise<number> {
-    return chiSquared.cdf(x, degreesOfFreedom);
+  cdf: function(x, degreesOfFreedom, lowerTail = true): Promise<number> {
+    return chiSquared.cdf(x, degreesOfFreedom, lowerTail);
   },
-  quantile: function(p, degreesOfFreedom): Promise<number> {
-    return chiSquared.quantile(p, degreesOfFreedom);
+  quantile: function(p, degreesOfFreedom, lowerTail = true): Promise<number> {
+    return chiSquared.quantile(p, degreesOfFreedom, lowerTail);
   },
   pdfSync: function(x, degreesOfFreedom): number {
     return chiSquared.pdfSync(x, degreesOfFreedom);
   },
-  cdfSync: function(x, degreesOfFreedom): number {
-    return chiSquared.cdfSync(x, degreesOfFreedom);
+  cdfSync: function(x, degreesOfFreedom, lowerTail = true): number {
+    return chiSquared.cdfSync(x, degreesOfFreedom, lowerTail);
   },
-  quantileSync: function(p, degreesOfFreedom): number {
-    return chiSquared.quantileSync(p, degreesOfFreedom);
+  quantileSync: function(p, degreesOfFreedom, lowerTail = true): number {
+    return chiSquared.quantileSync(p, degreesOfFreedom, lowerTail);
   }
 };
 
