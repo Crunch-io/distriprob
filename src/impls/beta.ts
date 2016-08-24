@@ -3,7 +3,6 @@ import {asyncGen} from "./async";
 import * as cfs from "./continuedFractionSolver";
 import * as gamma from "./gamma";
 import * as rf from "./rootFind";
-import * as di from "./definiteIntegral";
 
 // This import and then renaming of imports is necessary to allow the async module to
 // correctly generate web worker scripts.
