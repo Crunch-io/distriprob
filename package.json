@@ -1,6 +1,6 @@
 {
   "name": "distriprob",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A library for calculating the PDF, CDFs, and quantile function values of common probability distributions",
   "main": "lib/index.js",
   "typings": "lib/index",
@@ -13,7 +13,7 @@
     "ci-test": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -R tap \"./lib/test/**/*.js\" > test.tap && ./node_modules/istanbul/lib/cli.js report clover",
     "typescript-transpile": "rm -rf lib && ./node_modules/typescript/bin/tsc --project .",
     "install-typings": "./node_modules/typings/dist/bin.js install",
-    "bundle": "rm -f ./bundle.js && ./node_modules/browserify/bin/cmd.js ./lib/index.js --standalone distriprob > ./bundle.js"
+    "bundle": "rm -f ./bundle.js && ./node_modules/browserify/bin/cmd.js ./lib/index.js --standalone distriprob --no-builtins > ./bundle.js"
   },
   "repository": {
     "type": "git",
