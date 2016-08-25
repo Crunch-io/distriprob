@@ -192,9 +192,9 @@ function _cdfSyncHardCase(lnhEval, k, n, K, N, lowerTail) {
   }
 }
 
-export function quantileSync(p, draws, successPop, totalPop, lowerTail = true){
-  let lnh0Eval: number | null = null;
-  let lnhMaxEval: number | null = null;
+export function quantileSync(p, draws, successPop, totalPop, lowerTail = true, lnh0Eval?, lnhMaxEval?){
+  let h0log = lnh0Eval;
+  let hMaxlog = lnhMaxEval;
   let mean = draws * (successPop/totalPop);
 
   function simplifiedCDF(val) {
@@ -204,13 +204,13 @@ export function quantileSync(p, draws, successPop, totalPop, lowerTail = true){
       return easyCaseResult;
     } else {
       if (val <= mean) {
-        lnh0Eval = lnh0Eval === null ? lnh0(draws, successPop, totalPop) : lnh0Eval;
+        h0log = !h0log ? lnh0(draws, successPop, totalPop) : h0log;
 
-        return _cdfSyncHardCase(lnh0Eval, val, draws, successPop, totalPop, lowerTail);
+        return _cdfSyncHardCase(h0log, val, draws, successPop, totalPop, lowerTail);
       } else {
-        lnhMaxEval = lnhMaxEval === null ? lnhMax(draws, successPop, totalPop):lnhMaxEval;
+        hMaxlog = !hMaxlog ? lnhMax(draws, successPop, totalPop) : hMaxlog;
 
-        return _cdfSyncHardCase(lnhMaxEval, val, draws, successPop, totalPop, lowerTail);
+        return _cdfSyncHardCase(hMaxlog, val, draws, successPop, totalPop, lowerTail);
       }
     }
   }
@@ -264,4 +264,71 @@ function lnhMax(draws, successPop, totalPop){
   const max = Math.min(n, K);
 
   return lnFactorialFractionEval([K, N-max], [N, K-max]);
+}
+
+export function randomSync(n, draws, successPop, totalPop, seed?: string | number, randoms?) {
+  // these two below are the heavy calculations for the distribution, so just do them once
+  const lnh0Eval = lnh0(draws, successPop, totalPop);
+  const lnhMaxEval = lnhMax(draws, successPop, totalPop);
+
+  if (!randoms) {
+    randoms = [];
+    const sr = require("seedrandom");
+    let rng;
+    if (seed) {
+      rng = sr(seed);
+    } else {
+      rng = sr();
+    }
+
+    while (randoms.length < n) {
+      let rand = rng();
+
+      if (rand !== 0) {
+        randoms.push(rng());
+      }
+    }
+  }
+
+  const result: any[] = [];
+
+  while (randoms.length > 0) {
+    result.push(
+      quantileSync(randoms.pop(), draws, successPop, totalPop, true, lnh0Eval, lnhMaxEval)
+    );
+  }
+
+  return result;
+}
+
+export function random(n, draws, successPop, totalPop, seed?: string | number) {
+  const randoms: any = [];
+  const sr = require("seedrandom");
+  let rng;
+  if (seed) {
+    rng = sr(seed);
+  } else {
+    rng = sr();
+  }
+
+  while (randoms.length < n) {
+    let rand = rng();
+
+    if (rand !== 0) {
+      randoms.push(rng());
+    }
+  }
+
+  return asyncGen([
+    discreteQuantileFind,
+    primesLessThanOrEqualTo,
+    _factorialPrimes,
+    factorialPrimes,
+    lnFactorialFractionEval,
+    _cdfSyncEasyCases,
+    _cdfSyncHardCase,
+    lnh0,
+    lnhMax,
+    quantileSync
+  ], randomSync, [n, draws, successPop, totalPop, null, randoms]);
 }

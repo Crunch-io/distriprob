@@ -61,6 +61,10 @@ export function cdf(k, lambda, lowerTail = true) {
 }
 
 export function quantileSync(p, lambda, lowerTail = true) {
+  function simplifiedCDF(val) {
+    return cdfSync(val, lambda, lowerTail);
+  }
+
   if (p === 0) {
     if (lowerTail) {
       return 0;
@@ -74,10 +78,6 @@ export function quantileSync(p, lambda, lowerTail = true) {
       return 0;
     }
   } else {
-    function simplifiedCDF(val) {
-      return cdfSync(val, lambda, lowerTail);
-    }
-
     const mean = lambda;
 
     return discreteQuantileFind(simplifiedCDF, p, null, 0, mean, lowerTail);

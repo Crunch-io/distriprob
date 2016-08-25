@@ -259,6 +259,19 @@ export function cdf(x, shape, scale, lowerTail = true) {
 }
 
 export function quantileSync(p, shape, scale, lowerTail = true) {
+  function f(val) {
+    return cdfSync(val, shape, scale, lowerTail);
+  }
+
+  function fPrime(val) {
+    if (lowerTail) {
+      return pdfSync(val, shape, scale);
+    } else {
+      return - pdfSync(val, shape, scale);
+    }
+
+  }
+
   if (p === 0) {
     if (lowerTail) {
       return 0;
@@ -272,19 +285,6 @@ export function quantileSync(p, shape, scale, lowerTail = true) {
       return 0;
     }
   } else {
-    function f(val) {
-      return cdfSync(val, shape, scale, lowerTail);
-    }
-
-    function fPrime(val) {
-      if (lowerTail) {
-        return pdfSync(val, shape, scale);
-      } else {
-        return - pdfSync(val, shape, scale);
-      }
-
-    }
-
     const distMean = shape * scale;
 
     return rootFind(f, fPrime, p, distMean, null, 0);

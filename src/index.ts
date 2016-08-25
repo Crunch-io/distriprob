@@ -236,6 +236,10 @@ export const hypergeometric = {
   quantile: function(p, draws, successPop, totalPop, lowerTail = true): Promise<number> {
     return hypergeo.quantile(p, draws, successPop, totalPop, lowerTail);
   },
+  random: function(n, draws, successPop, totalPop, seed?: string | number):
+    Promise<number[]> {
+    return hypergeo.random(n, draws, successPop, totalPop, seed);
+  },
   pdfSync: function(sampleSuccesses, draws, successPop, totalPop): number {
     return hypergeo.pmfSync(sampleSuccesses, draws, successPop, totalPop);
   },
@@ -245,6 +249,9 @@ export const hypergeometric = {
   },
   quantileSync: function(p, draws, successPop, totalPop, lowerTail = true): number {
     return hypergeo.quantileSync(p, draws, successPop, totalPop, lowerTail);
+  },
+  randomSync: function(n, draws, successPop, totalPop, seed?: string | number): number[] {
+    return hypergeo.randomSync(n, draws, successPop, totalPop, seed);
   }
 };
 

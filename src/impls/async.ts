@@ -33,7 +33,15 @@ function createScriptStr(functionDependencies: any,
 
   for (let i = 0; i < scriptArgs.length; i++){
     let arg = scriptArgs[i];
-    argString += arg.toString();
+    if (Array.isArray(arg)) {
+      argString += "[" + arg.toString() + "]";
+    } else if (arg === null) {
+      argString += "null";
+    } else if (typeof arg === "string") {
+      argString += `"${arg}"`;
+    } else {
+      argString += arg.toString();
+    }
     if (i < (scriptArgs.length - 1)) {
       argString += ", ";
     }
