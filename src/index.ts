@@ -229,20 +229,22 @@ export const hypergeometric = {
   pdf: function(sampleSuccesses, draws, successPop, totalPop): Promise<number> {
     return hypergeo.pmf(sampleSuccesses, draws, successPop, totalPop);
   },
-  cdf: function(sampleSuccesses, draws, successPop, totalPop): Promise<number> {
-    return hypergeo.cdf(sampleSuccesses, draws, successPop, totalPop);
+  cdf: function(sampleSuccesses, draws, successPop, totalPop, lowerTail = true):
+    Promise<number> {
+    return hypergeo.cdf(sampleSuccesses, draws, successPop, totalPop, lowerTail);
   },
-  quantile: function(p, draws, successPop, totalPop): Promise<number> {
-    return hypergeo.quantile(p, draws, successPop, totalPop);
+  quantile: function(p, draws, successPop, totalPop, lowerTail = true): Promise<number> {
+    return hypergeo.quantile(p, draws, successPop, totalPop, lowerTail);
   },
   pdfSync: function(sampleSuccesses, draws, successPop, totalPop): number {
     return hypergeo.pmfSync(sampleSuccesses, draws, successPop, totalPop);
   },
-  cdfSync: function(sampleSuccesses, draws, successPop, totalPop): number {
-    return hypergeo.cdfSync(sampleSuccesses, draws, successPop, totalPop);
+  cdfSync: function(sampleSuccesses, draws, successPop, totalPop, lowerTail = true):
+    number {
+    return hypergeo.cdfSync(sampleSuccesses, draws, successPop, totalPop, lowerTail);
   },
-  quantileSync: function(p, draws, successPop, totalPop): number {
-    return hypergeo.quantileSync(p, draws, successPop, totalPop);
+  quantileSync: function(p, draws, successPop, totalPop, lowerTail = true): number {
+    return hypergeo.quantileSync(p, draws, successPop, totalPop, lowerTail);
   }
 };
 
