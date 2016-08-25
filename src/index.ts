@@ -73,6 +73,9 @@ export const t = {
   quantile: function(p, degreesOfFreedom, lowerTail = true): Promise<number> {
     return studentsT.quantile(p, degreesOfFreedom, lowerTail);
   },
+  random: function(n, degreesOfFreedom, seed?: number | string): Promise<number[]> {
+    return studentsT.random(n, degreesOfFreedom, seed);
+  },
   pdfSync: function(x, degreesOfFreedom): number {
     return studentsT.pdfSync(x, degreesOfFreedom);
   },
@@ -81,6 +84,9 @@ export const t = {
   },
   quantileSync: function(p, degreesOfFreedom, lowerTail = true): number {
     return studentsT.quantileSync(p, degreesOfFreedom, lowerTail);
+  },
+  randomSync: function(n, degreesOfFreedom, seed?: number | string): number[] {
+    return studentsT.randomSync(n, degreesOfFreedom, seed);
   }
 };
 
@@ -94,6 +100,9 @@ export const chi2 = {
   quantile: function(p, degreesOfFreedom, lowerTail = true): Promise<number> {
     return chiSquared.quantile(p, degreesOfFreedom, lowerTail);
   },
+  random: function(n, degreesOfFreedom, seed?: number | string): Promise<number[]> {
+    return chiSquared.random(n, degreesOfFreedom, seed);
+  },
   pdfSync: function(x, degreesOfFreedom): number {
     return chiSquared.pdfSync(x, degreesOfFreedom);
   },
@@ -102,6 +111,9 @@ export const chi2 = {
   },
   quantileSync: function(p, degreesOfFreedom, lowerTail = true): number {
     return chiSquared.quantileSync(p, degreesOfFreedom, lowerTail);
+  },
+  randomSync: function(n, degreesOfFreedom, seed?: number | string): number[] {
+    return chiSquared.randomSync(n, degreesOfFreedom, seed);
   }
 };
 
