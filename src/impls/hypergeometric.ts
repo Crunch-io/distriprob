@@ -273,7 +273,7 @@ export function randomSync(n, draws, successPop, totalPop, seed?: string | numbe
 
   if (!randoms) {
     randoms = [];
-    const sr = require("seedrandom");
+    const sr = require("../../node_modules/seedrandom/seedrandom.min");
     let rng;
     if (seed) {
       rng = sr(seed);
@@ -303,7 +303,7 @@ export function randomSync(n, draws, successPop, totalPop, seed?: string | numbe
 
 export function random(n, draws, successPop, totalPop, seed?: string | number) {
   const randoms: any = [];
-  const sr = require("seedrandom");
+  const sr = require("../../node_modules/seedrandom/seedrandom.min");
   let rng;
   if (seed) {
     rng = sr(seed);
