@@ -2,6 +2,7 @@
 import {asyncGen} from "./async";
 import * as rf from "./rootFind";
 import * as pf from "./primeFactors";
+import {rand, randSync}  from "./random";
 
 const discreteQuantileFind = rf.discreteQuantileFind;
 const lnFactorialFractionEval = pf.lnFactorialFractionEval;
@@ -268,58 +269,26 @@ function lnhMax(draws, successPop, totalPop){
 
 export function randomSync(n, draws, successPop, totalPop, seed?: string | number, randoms?) {
   // these two below are the heavy calculations for the distribution, so just do them once
+  // here
   const lnh0Eval = lnh0(draws, successPop, totalPop);
   const lnhMaxEval = lnhMax(draws, successPop, totalPop);
 
-  if (!randoms) {
-    randoms = [];
-    const sr = require("../../node_modules/seedrandom/seedrandom.min");
-    let rng;
-    if (seed) {
-      rng = sr(seed);
-    } else {
-      rng = sr();
-    }
-
-    while (randoms.length < n) {
-      let rand = rng();
-
-      if (rand !== 0) {
-        randoms.push(rng());
-      }
-    }
-  }
-
-  const result: any[] = [];
-
-  while (randoms.length > 0) {
-    result.push(
-      quantileSync(randoms.pop(), draws, successPop, totalPop, true, lnh0Eval, lnhMaxEval)
-    );
-  }
-
-  return result;
+  return randSync(n,
+                  quantileSync,
+                  [
+                    draws,
+                    successPop,
+                    totalPop,
+                    true,
+                    lnh0Eval,
+                    lnhMaxEval
+                  ],
+                  seed,
+                  randoms);
 }
 
 export function random(n, draws, successPop, totalPop, seed?: string | number) {
-  const randoms: any = [];
-  const sr = require("../../node_modules/seedrandom/seedrandom.min");
-  let rng;
-  if (seed) {
-    rng = sr(seed);
-  } else {
-    rng = sr();
-  }
-
-  while (randoms.length < n) {
-    let rand = rng();
-
-    if (rand !== 0) {
-      randoms.push(rng());
-    }
-  }
-
-  return asyncGen([
+  return rand(n, quantileSync, [draws, successPop, totalPop], seed, [
     discreteQuantileFind,
     primesLessThanOrEqualTo,
     _factorialPrimes,
@@ -328,7 +297,6 @@ export function random(n, draws, successPop, totalPop, seed?: string | number) {
     _cdfSyncEasyCases,
     _cdfSyncHardCase,
     lnh0,
-    lnhMax,
-    quantileSync
-  ], randomSync, [n, draws, successPop, totalPop, null, randoms]);
+    lnhMax
+  ]);
 }

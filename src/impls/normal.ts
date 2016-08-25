@@ -3,13 +3,13 @@ import {continuedFractionSolver} from "./continuedFractionSolver";
 import * as gamma from "./gamma";
 import * as rf from "./rootFind";
 import {asyncGen} from "./async";
+import {rand, randSync}  from "./random";
 
 // This import and then renaming of imports is necessary to allow the async module to
 // correctly generate web worker scripts.
 const lowerIncompleteGamma = gamma.lowerIncompleteGamma;
 const upperIncompleteGamma = gamma.upperIncompleteGamma;
 const rootFind = rf.rootFind;
-
 
 export function pdfSync(x, mu?, sigma?) {
   if (typeof mu === "undefined" || mu === null){
@@ -138,55 +138,11 @@ export function randomSync(n, mu?, sigma?, seed?: number | string, randoms?) {
     sigma = 1;
   }
 
-  if (!randoms) {
-    randoms = [];
-    const sr = require("../../node_modules/seedrandom/seedrandom.min");
-    let rng;
-    if (seed) {
-      rng = sr(seed);
-    } else {
-      rng = sr();
-    }
-
-    while (randoms.length < n) {
-      let rand = rng();
-
-      if (rand !== 0) {
-        randoms.push(rng());
-      }
-    }
-  }
-
-  const result: any[] = [];
-
-  while (randoms.length > 0) {
-    result.push(
-      quantileSync(randoms.pop(), mu, sigma, true)
-    );
-  }
-
-  return result;
+  return randSync(n, quantileSync, [mu, sigma, true], seed, randoms);
 }
 
 export function random(n, mu?, sigma?, seed?: number | string) {
-  const randoms: any = [];
-  const sr = require("../../node_modules/seedrandom/seedrandom.min");
-  let rng;
-  if (seed) {
-    rng = sr(seed);
-  } else {
-    rng = sr();
-  }
-
-  while (randoms.length < n) {
-    let rand = rng();
-
-    if (rand !== 0) {
-      randoms.push(rng());
-    }
-  }
-
-  return asyncGen([
+  return rand(n, quantileSync, [mu, sigma], seed, [
     rf.newton,
     rf.bisection,
     rootFind,
@@ -199,7 +155,6 @@ export function random(n, mu?, sigma?, seed?: number | string) {
     gamma.lowerIncompleteGamma,
     gamma.upperIncompleteGamma,
     pdfSync,
-    cdfSync,
-    quantileSync
-  ], randomSync, [n, mu, sigma, null, randoms]);
+    cdfSync
+  ]);
 }
