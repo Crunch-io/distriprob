@@ -46,6 +46,9 @@ export const normal = {
   quantile: function(p, mu?, sigma?, lowerTail = true): Promise<number> {
     return _normal.quantile(p, mu, sigma, lowerTail);
   },
+  random: function(n, mu?, sigma?, seed?: number | string): Promise<number[]> {
+    return _normal.random(n, mu, sigma, seed);
+  },
   pdfSync: function(x, mu?, sigma?): number {
     return _normal.pdfSync(x, mu, sigma);
   },
@@ -54,7 +57,10 @@ export const normal = {
   },
   quantileSync: function(p, mu?, sigma?, lowerTail = true): number {
     return _normal.quantileSync(p, mu, sigma, lowerTail);
-  }
+  },
+  randomSync: function(n, mu?, sigma?, seed?: number | string): number[] {
+    return _normal.randomSync(n, mu, sigma, seed);
+  },
 };
 
 export const t = {

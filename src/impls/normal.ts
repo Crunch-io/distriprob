@@ -11,12 +11,12 @@ const upperIncompleteGamma = gamma.upperIncompleteGamma;
 const rootFind = rf.rootFind;
 
 
-export function pdfSync(x, mu, sigma) {
-  if (!mu){
+export function pdfSync(x, mu?, sigma?) {
+  if (typeof mu === "undefined" || mu === null){
     mu = 0;
   }
 
-  if (!sigma){
+  if (typeof sigma === "undefined" || sigma === null){
     sigma = 1;
   }
 
@@ -28,7 +28,7 @@ export function pdfSync(x, mu, sigma) {
   return coefficient * Math.pow(Math.E, exponent);
 }
 
-export function pdf(x, mu, sigma) {
+export function pdf(x, mu?, sigma?) {
   function script(a, b, c) {
     return pdfSync(a, b, c);
   }
@@ -36,12 +36,12 @@ export function pdf(x, mu, sigma) {
 }
 
 
-export function cdfSync(x, mu, sigma, lowerTail = true) {
-  if (!mu) {
+export function cdfSync(x, mu?, sigma?, lowerTail = true) {
+  if (typeof mu === "undefined" || mu === null){
     mu = 0;
   }
 
-  if (!sigma) {
+  if (typeof sigma === "undefined" || sigma === null){
     sigma = 1;
   }
 
@@ -58,7 +58,7 @@ export function cdfSync(x, mu, sigma, lowerTail = true) {
   }
 }
 
-export function cdf(x, mu, sigma, lowerTail = true) {
+export function cdf(x, mu?, sigma?, lowerTail = true) {
   return asyncGen([
     continuedFractionSolver,
     gamma.lnGamma,
@@ -71,7 +71,15 @@ export function cdf(x, mu, sigma, lowerTail = true) {
   ], cdfSync, [x, mu, sigma, lowerTail]);
 }
 
-export function quantileSync(p, mu, sigma, lowerTail = true) {
+export function quantileSync(p, mu?, sigma?, lowerTail = true) {
+  if (typeof mu === "undefined" || mu === null){
+    mu = 0;
+  }
+
+  if (typeof sigma === "undefined" || sigma === null){
+    sigma = 1;
+  }
+
   function f (val) {
     return cdfSync(val, 0, 1);
   }
@@ -103,7 +111,7 @@ export function quantileSync(p, mu, sigma, lowerTail = true) {
   }
 }
 
-export function quantile(p, mu, sigma, lowerTail = true) {
+export function quantile(p, mu?, sigma?, lowerTail = true) {
   return asyncGen([
     rf.newton,
     rf.bisection,
@@ -119,4 +127,79 @@ export function quantile(p, mu, sigma, lowerTail = true) {
     pdfSync,
     cdfSync
   ], quantileSync, [p, mu, sigma, lowerTail]);
+}
+
+export function randomSync(n, mu?, sigma?, seed?: number | string, randoms?) {
+  if (typeof mu === "undefined" || mu === null){
+    mu = 0;
+  }
+
+  if (typeof sigma === "undefined" || sigma === null){
+    sigma = 1;
+  }
+
+  if (!randoms) {
+    randoms = [];
+    const sr = require("../../node_modules/seedrandom/seedrandom.min");
+    let rng;
+    if (seed) {
+      rng = sr(seed);
+    } else {
+      rng = sr();
+    }
+
+    while (randoms.length < n) {
+      let rand = rng();
+
+      if (rand !== 0) {
+        randoms.push(rng());
+      }
+    }
+  }
+
+  const result: any[] = [];
+
+  while (randoms.length > 0) {
+    result.push(
+      quantileSync(randoms.pop(), mu, sigma, true)
+    );
+  }
+
+  return result;
+}
+
+export function random(n, mu?, sigma?, seed?: number | string) {
+  const randoms: any = [];
+  const sr = require("../../node_modules/seedrandom/seedrandom.min");
+  let rng;
+  if (seed) {
+    rng = sr(seed);
+  } else {
+    rng = sr();
+  }
+
+  while (randoms.length < n) {
+    let rand = rng();
+
+    if (rand !== 0) {
+      randoms.push(rng());
+    }
+  }
+
+  return asyncGen([
+    rf.newton,
+    rf.bisection,
+    rootFind,
+    continuedFractionSolver,
+    gamma.lnGamma,
+    gamma.gammaContinuedFraction,
+    gamma.lnLowerIncompleteGammaA,
+    gamma.lnUpperIncompleteGammaB,
+    gamma.lnLowerIncompleteGamma,
+    gamma.lowerIncompleteGamma,
+    gamma.upperIncompleteGamma,
+    pdfSync,
+    cdfSync,
+    quantileSync
+  ], randomSync, [n, mu, sigma, null, randoms]);
 }
