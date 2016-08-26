@@ -264,6 +264,9 @@ export const poisson = {
   quantile: function(p, lambda, lowerTail = true): Promise<number> {
     return _poisson.quantile(p, lambda, lowerTail);
   },
+  random: function(n, lambda, seed?: number | string): Promise<number[]> {
+    return _poisson.random(n, lambda, seed);
+  },
   pdfSync: function(k, lambda): number {
     return _poisson.pmfSync(k, lambda);
   },
@@ -272,6 +275,9 @@ export const poisson = {
   },
   quantileSync: function(p, lambda, lowerTail = true): number {
     return _poisson.quantileSync(p, lambda, lowerTail);
+  },
+  randomSync: function(n, lambda, seed?: number | string): number[] {
+    return _poisson.randomSync(n, lambda, seed);
   }
 };
 

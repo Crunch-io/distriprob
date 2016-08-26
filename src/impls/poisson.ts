@@ -3,6 +3,7 @@ import * as gamma from "./gamma";
 import * as rf from "./rootFind";
 import * as cfs from "./continuedFractionSolver";
 import {asyncGen} from "./async";
+import {rand, randSync} from "./random";
 
 // This import and then renaming of imports is necessary to allow the async module to
 // correctly generate web worker scripts.
@@ -98,4 +99,24 @@ export function quantile(p, lambda, lowerTail = true) {
     gamma.upperIncompleteGamma,
     cdfSync
   ], quantileSync, [p, lambda, lowerTail]);
+}
+
+export function randomSync(n, lambda, seed?: number | string, randoms?) {
+  return randSync(n, quantileSync, [lambda], seed, randoms);
+}
+
+export function random(n, lambda, seed?: number | string) {
+  return rand(n, quantileSync, [lambda], seed, [
+    discreteQuantileFind,
+    continuedFractionSolver,
+    gamma.lnGamma,
+    gamma.gammaContinuedFraction,
+    gamma.lnLowerIncompleteGammaA,
+    gamma.lnUpperIncompleteGammaB,
+    gamma.lnLowerIncompleteGamma,
+    gamma.lnUpperIncompleteGamma,
+    gamma.lowerIncompleteGamma,
+    gamma.upperIncompleteGamma,
+    cdfSync
+  ]);
 }
