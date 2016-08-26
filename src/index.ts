@@ -24,6 +24,10 @@ export const uniform = {
     Promise<number> {
     return _uniform.quantile(x, lowerSupportBound, upperSupportBound, lowerTail);
   },
+  random: function(n, lowerSupportBound, upperSupportBound, seed?: number | string):
+    Promise<number[]> {
+    return _uniform.random(n, lowerSupportBound, upperSupportBound, seed);
+  },
   pdfSync: function(x, lowerSupportBound, upperSupportBound): number {
     return _uniform.pdfSync(x, lowerSupportBound, upperSupportBound);
   },
@@ -33,6 +37,10 @@ export const uniform = {
   quantileSync: function(x, lowerSupportBound, upperSupportBound, lowerTail = true):
     number {
     return _uniform.quantileSync(x, lowerSupportBound, upperSupportBound, lowerTail);
+  },
+  randomSync: function(n, lowerSupportBound, upperSupportBound, seed?: number | string):
+    number[] {
+    return _uniform.randomSync(n, lowerSupportBound, upperSupportBound, seed);
   }
 };
 

@@ -1,3 +1,5 @@
+import {rand, randSync} from "./random";
+
 "use strict";
 
 export function pdfSync(x, lowerSupportBound, upperSupportBound) {
@@ -64,4 +66,20 @@ export function quantile(p, lowerSupportBound, upperSupportBound, lowerTail = tr
   return Promise.resolve(
     quantileSync(p, lowerSupportBound, upperSupportBound, lowerTail)
   );
+}
+
+export function randomSync(n,
+                           lowerSupportBound,
+                           upperSupportBound,
+                           seed?: number | string,
+                           randoms?) {
+  return randSync(n, quantileSync, [lowerSupportBound, upperSupportBound], seed, randoms);
+}
+
+export function random(n,
+                       lowerSupportBound,
+                       upperSupportBound,
+                       seed?: number | string,
+                       randoms?) {
+  return rand(n, quantileSync, [lowerSupportBound, upperSupportBound], seed, []);
 }
