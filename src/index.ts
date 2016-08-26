@@ -234,23 +234,29 @@ export const beta = {
 };
 
 export const binomial = {
-  pdf: function(k, n, probSuccess): Promise<number> {
-    return binom.pmf(k, n, probSuccess);
+  pdf: function(k, trials, probSuccess): Promise<number> {
+    return binom.pmf(k, trials, probSuccess);
   },
-  cdf: function(k, n, probSuccess, lowerTail = true): Promise<number> {
-    return binom.cdf(k, n, probSuccess, lowerTail);
+  cdf: function(k, trials, probSuccess, lowerTail = true): Promise<number> {
+    return binom.cdf(k, trials, probSuccess, lowerTail);
   },
-  quantile: function(p, n, probSuccess, lowerTail = true): Promise<number> {
-    return binom.quantile(p, n, probSuccess, lowerTail);
+  quantile: function(p, trials, probSuccess, lowerTail = true): Promise<number> {
+    return binom.quantile(p, trials, probSuccess, lowerTail);
   },
-  pdfSync: function(k, n, probSuccess): number {
-    return binom.pmfSync(k, n, probSuccess);
+  random: function(n, trials, probSuccess, seed?: number | string): Promise<number[]> {
+    return binom.random(n, trials, probSuccess, seed);
   },
-  cdfSync: function(k, n, probSuccess, lowerTail = true): number {
-    return binom.cdfSync(k, n, probSuccess, lowerTail);
+  pdfSync: function(k, trials, probSuccess): number {
+    return binom.pmfSync(k, trials, probSuccess);
   },
-  quantileSync: function(p, n, probSuccess, lowerTail = true): number {
-    return binom.quantileSync(p, n, probSuccess, lowerTail);
+  cdfSync: function(k, trials, probSuccess, lowerTail = true): number {
+    return binom.cdfSync(k, trials, probSuccess, lowerTail);
+  },
+  quantileSync: function(p, trials, probSuccess, lowerTail = true): number {
+    return binom.quantileSync(p, trials, probSuccess, lowerTail);
+  },
+  randomSync: function(n, trials, probSuccess, seed?: number | string): number[] {
+    return binom.randomSync(n, trials, probSuccess, seed);
   }
 };
 

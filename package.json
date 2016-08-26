@@ -37,7 +37,10 @@
     "beta",
     "poisson",
     "binomial",
-    "hypergeometric"
+    "hypergeometric",
+    "random",
+    "number",
+    "generator"
   ],
   "author": "Zachary Martin",
   "license": "MIT",

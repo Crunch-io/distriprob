@@ -6,6 +6,7 @@ import * as rf from "./rootFind";
 import * as cfs from "./continuedFractionSolver";
 import * as pf from "./primeFactors";
 import {asyncGen} from "./async";
+import {rand, randSync} from "./random";
 
 // This import and then renaming of imports is necessary to allow the async module to
 // correctly generate web worker scripts.
@@ -39,36 +40,37 @@ export function lnBinomialCoefficient(n, chooseK) {
   return lnFactorialFractionEval([n], [chooseK, n-chooseK]);
 }
 
-export function pmfSync(k, n, probSuccess) {
+export function pmfSync(k, trials, probSuccess) {
   const p = probSuccess;
 
-  if (!Number.isInteger(k) || k < 0 || k > n) {
+  if (!Number.isInteger(k) || k < 0 || k > trials) {
     return 0
   } else {
     return Math.exp(
-      lnBinomialCoefficient(n, k) + (k * Math.log(p)) + ((n-k) * Math.log(1 - p,))
+      lnBinomialCoefficient(trials, k) + (k * Math.log(p)) +
+      ((trials-k) * Math.log(1 - p,))
     );
   }
 }
 
-export function pmf(k, n, probSuccess) {
+export function pmf(k, trials, probSuccess) {
   return asyncGen([
     pf.primesLessThanOrEqualTo,
     pf._factorialPrimes,
     pf.factorialPrimes,
     lnFactorialFractionEval,
     lnBinomialCoefficient
-  ], pmfSync, [k, n, probSuccess]);
+  ], pmfSync, [k, trials, probSuccess]);
 }
 
-export function cdfSync(k, n, probSuccess, lowerTail = true) {
+export function cdfSync(k, trials, probSuccess, lowerTail = true) {
   if (k < 0) {
     if (lowerTail) {
       return 0;
     } else {
       return 1;
     }
-  } else if (k > n) {
+  } else if (k > trials) {
     if (lowerTail) {
       return 1;
     } else {
@@ -77,14 +79,14 @@ export function cdfSync(k, n, probSuccess, lowerTail = true) {
   } else {
     k = Math.floor(k);
     if (lowerTail) {
-      return incompleteBeta(1 - probSuccess, n - k, k + 1);
+      return incompleteBeta(1 - probSuccess, trials - k, k + 1);
     } else {
-      return incompleteBeta(probSuccess, k + 1, n - k)
+      return incompleteBeta(probSuccess, k + 1, trials - k)
     }
   }
 }
 
-export function cdf(k, n, probSuccess, lowerTail = true) {
+export function cdf(k, trials, probSuccess, lowerTail = true) {
   return asyncGen([
     beta.lnBeta,
     gamma.lnGamma,
@@ -93,33 +95,33 @@ export function cdf(k, n, probSuccess, lowerTail = true) {
     beta.continuedFraction,
     beta.lnIncompleteBeta,
     beta.incompleteBeta
-  ], cdfSync, [k, n, probSuccess, lowerTail]);
+  ], cdfSync, [k, trials, probSuccess, lowerTail]);
 }
 
-export function quantileSync(p, n, probSuccess, lowerTail = true) {
+export function quantileSync(p, trials, probSuccess, lowerTail = true) {
   function simplifiedCDF(val) {
-    return cdfSync(val, n, probSuccess, lowerTail);
+    return cdfSync(val, trials, probSuccess, lowerTail);
   }
   if (p === 0) {
     if (lowerTail) {
       return 0;
     } else {
-      return n;
+      return trials;
     }
   } else if (p === 1) {
     if (lowerTail) {
-      return n;
+      return trials;
     } else {
       return 0;
     }
   } else {
-    const mean = Math.floor(n*p);
+    const mean = Math.floor(trials*p);
 
-    return discreteQuantileFind(simplifiedCDF, p, n, 0, mean, lowerTail);
+    return discreteQuantileFind(simplifiedCDF, p, trials, 0, mean, lowerTail);
   }
 }
 
-export function quantile(p, n, probSuccess, lowerTail = true) {
+export function quantile(p, trials, probSuccess, lowerTail = true) {
   return asyncGen([
     discreteQuantileFind,
     beta.lnBeta,
@@ -130,7 +132,25 @@ export function quantile(p, n, probSuccess, lowerTail = true) {
     beta.lnIncompleteBeta,
     beta.incompleteBeta,
     cdfSync
-  ], quantileSync, [p, n, probSuccess, lowerTail]);
+  ], quantileSync, [p, trials, probSuccess, lowerTail]);
+}
+
+export function randomSync(n, trials, probSuccess, seed?: number | string, randoms?) {
+  return randSync(n, quantileSync, [trials, probSuccess], seed, randoms);
+}
+
+export function random(n, trials, probSuccess, seed?: number | string) {
+  return rand(n, quantileSync, [trials, probSuccess], seed, [
+    discreteQuantileFind,
+    beta.lnBeta,
+    gamma.lnGamma,
+    continuedFractionSolver,
+    beta.d,
+    beta.continuedFraction,
+    beta.lnIncompleteBeta,
+    beta.incompleteBeta,
+    cdfSync
+  ]);
 }
 
 
