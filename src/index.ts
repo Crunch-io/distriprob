@@ -127,6 +127,9 @@ export const F = {
   quantile: function(p, dof1, dof2, lowerTail = true): Promise<number> {
     return fDist.quantile(p, dof1, dof2, lowerTail);
   },
+  random: function(n, dof1, dof2, seed?: number | string): Promise<number[]> {
+    return fDist.random(n, dof1, dof2, seed);
+  },
   pdfSync: function(x, dof1, dof2): number {
     return fDist.pdfSync(x, dof1, dof2);
   },
@@ -135,6 +138,9 @@ export const F = {
   },
   quantileSync: function(p, dof1, dof2, lowerTail = true): number {
     return fDist.quantileSync(p, dof1, dof2, lowerTail);
+  },
+  randomSync: function(n, dof1, dof2, seed?: number | string): number[] {
+    return fDist.randomSync(n, dof1, dof2, seed);
   }
 };
 

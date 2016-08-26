@@ -3,6 +3,7 @@ import * as gamma from "./gamma";
 import * as beta from "./beta";
 import * as rf from "./rootFind";
 import {asyncGen} from "./async";
+import {rand, randSync} from "./random";
 import {continuedFractionSolver} from "./continuedFractionSolver";
 
 // This import and then renaming of imports is necessary to allow the async module to
@@ -101,3 +102,23 @@ export function quantile(p, dof1, dof2, lowerTail = true) {
   ], quantileSync, [p, dof1, dof2, lowerTail]);
 }
 
+export function randomSync(n, dof1, dof2, seed?: number | string, randoms?) {
+  return randSync(n, quantileSync, [dof1, dof2], seed, randoms);
+}
+
+export function random(n, dof1, dof2, seed?: number | string) {
+  return rand(n, quantileSync, [dof1, dof2], seed, [
+    rf.newton,
+    rf.bisection,
+    rootFind,
+    beta.lnBeta,
+    gamma.lnGamma,
+    continuedFractionSolver,
+    beta.d,
+    beta.continuedFraction,
+    beta.lnIncompleteBeta,
+    beta.incompleteBeta,
+    pdfSync,
+    cdfSync
+  ]);
+}
