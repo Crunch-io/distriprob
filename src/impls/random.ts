@@ -4,7 +4,7 @@ import {asyncGen} from "./async";
 export function randSync(n, quantileFctn, quantileFctnArgs, seed, randoms) {
   if (!randoms) {
     randoms = [];
-    const sr = require("../../node_modules/seedrandom/seedrandom.min");
+    const sr = require("seedrandom");
     let rng;
     if (seed) {
       rng = sr(seed);
@@ -34,7 +34,7 @@ export function randSync(n, quantileFctn, quantileFctnArgs, seed, randoms) {
 
 export function rand(n, quantileFctn, quantileFctnParams, seed, fctnDependencies) {
   const randoms: any = [];
-  const sr = require("../../node_modules/seedrandom/seedrandom.min");
+  const sr = require("seedrandom");
   let rng;
   if (seed) {
     rng = sr(seed);
