@@ -189,6 +189,9 @@ export const gamma = {
   quantile: function(p, shape, scale, lowerTail = true): Promise<number> {
     return _gamma.quantile(p, shape, scale, lowerTail);
   },
+  random: function(n, shape, scale, seed?: number | string): Promise<number[]> {
+    return _gamma.random(n, shape, scale, seed);
+  },
   pdfSync: function(x, shape, scale): number {
     return _gamma.pdfSync(x, shape, scale);
   },
@@ -197,6 +200,9 @@ export const gamma = {
   },
   quantileSync: function(p, shape, scale, lowerTail = true): number {
     return _gamma.quantileSync(p, shape, scale, lowerTail);
+  },
+  randomSync: function(n, shape, scale, seed?: number | string): number[] {
+    return _gamma.randomSync(n, shape, scale, seed);
   }
 };
 

@@ -1,5 +1,6 @@
 "use strict";
 import {asyncGen} from "./async";
+import {rand, randSync} from "./random";
 import * as cfs from "./continuedFractionSolver";
 import * as rf from "./rootFind";
 
@@ -304,7 +305,30 @@ export function quantile(p, shape, scale, lowerTail = true) {
     rf.newton,
     rf.bisection,
     pdfSync,
+    gammaCDF,
     cdfSync
   ], quantileSync, [p, shape, scale, lowerTail]);
+}
+
+export function randomSync(n, shape, scale, seed?: number | string, randoms?) {
+  return randSync(n, quantileSync, [shape, scale], seed, randoms);
+}
+
+export function random(n, shape, scale, seed?: number | string) {
+  return rand(n, quantileSync, [shape, scale], seed, [
+    lnGamma,
+    gammaContinuedFraction,
+    continuedFractionSolver,
+    lnLowerIncompleteGammaA,
+    lnUpperIncompleteGammaB,
+    lowerIncompleteGamma,
+    upperIncompleteGamma,
+    rootFind,
+    rf.newton,
+    rf.bisection,
+    pdfSync,
+    gammaCDF,
+    cdfSync
+  ]);
 }
 
