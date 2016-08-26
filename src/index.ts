@@ -216,6 +216,9 @@ export const beta = {
   quantile: function(x, alpha, beta, lowerTail = true): Promise<number> {
     return _beta.quantile(x, alpha, beta, lowerTail);
   },
+  random: function(n, alpha, beta, seed?: number | string): Promise<number[]> {
+    return _beta.random(n, alpha, beta, seed);
+  },
   pdfSync: function(x, alpha, beta): number {
     return _beta.pdfSync(x, alpha, beta);
   },
@@ -225,6 +228,9 @@ export const beta = {
   quantileSync: function(x, alpha, beta, lowerTail = true): number {
     return _beta.quantileSync(x, alpha, beta, lowerTail);
   },
+  randomSync: function(n, alpha, beta, seed?: number | string): number[] {
+    return _beta.randomSync(n, alpha, beta, seed);
+  }
 };
 
 export const binomial = {
