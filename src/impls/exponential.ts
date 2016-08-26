@@ -1,6 +1,7 @@
 "use strict";
 
 import {asyncGen} from "./async";
+import {rand, randSync} from "./random";
 import * as gamma from "./gamma";
 import * as cf from "./continuedFractionSolver";
 import * as rf from "./rootFind";
@@ -102,4 +103,26 @@ export function quantile(p, lambda, lowerTail = true) {
     pdfSync,
     cdfSync
   ], quantileSync, [p, lambda, lowerTail]);
+}
+
+export function randomSync(n, lambda, seed?: number | string, randoms?) {
+  return randSync(n, quantileSync, [lambda], seed, randoms);
+}
+
+export function random(n, lambda, seed?: number | string) {
+  return rand(n, quantileSync, [lambda], seed, [
+    gammaCDF,
+    gamma.lnGamma,
+    gamma.gammaContinuedFraction,
+    cf.continuedFractionSolver,
+    gamma.lnLowerIncompleteGammaA,
+    gamma.lnUpperIncompleteGammaB,
+    gamma.lowerIncompleteGamma,
+    gamma.upperIncompleteGamma,
+    rootFind,
+    rf.newton,
+    rf.bisection,
+    pdfSync,
+    cdfSync
+  ]);
 }

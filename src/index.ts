@@ -162,6 +162,9 @@ export const exponential = {
   quantile: function(p, lambda, lowerTail = true): Promise<number> {
     return exp.quantile(p, lambda, lowerTail);
   },
+  random: function(n, lambda, seed?: number | string): Promise<number[]> {
+    return exp.random(n, lambda, seed);
+  },
   pdfSync: function(x, lambda): number {
     return exp.pdfSync(x, lambda);
   },
@@ -170,6 +173,9 @@ export const exponential = {
   },
   quantileSync: function(p, lambda, lowerTail = true): number {
     return exp.quantileSync(p, lambda, lowerTail);
+  },
+  randomSync: function(n, lambda, seed?: number | string): number[] {
+    return exp.randomSync(n, lambda, seed);
   }
 };
 
