@@ -43,7 +43,7 @@
     "generator"
   ],
   "author": "Zachary Martin",
-  "license": "MIT",
+  "license": "Boost",
   "bugs": {
     "url": "https://github.com/zachmart/distriprob/issues"
   },
