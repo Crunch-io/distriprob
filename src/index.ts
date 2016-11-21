@@ -61,6 +61,7 @@ import {Polygamma} from "./impls/boostPorts/special_functions/polygamma";
 import {Zeta} from "./impls/boostPorts/special_functions/zeta";
 import {Erf} from "./impls/boostPorts/special_functions/erf";
 import {ErfInv} from "./impls/boostPorts/special_functions/detail/erf_inv";
+import {Laborer} from "./impls/Laborer";
 
 const hypergeometricDist = new HypergeometricDist(cache);
 
@@ -598,6 +599,10 @@ export const uniform = {
                    seed?: number | string): number[] {
     return UniformDist.random(n, lowerSupportBound, upperSupportBound, seed);
   }
+};
+
+export const worker = function(config?: {maxPrimesTable?: number}): Laborer {
+  return new Laborer();
 };
 
 export const zeta = function(s: number): number {

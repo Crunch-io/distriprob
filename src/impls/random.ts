@@ -266,9 +266,9 @@ export class Random {
     if (Utility.environmentIsNode()) {
       const crypto = require("crypto");
       return Random.tostring(crypto.randomBytes(Random.WIDTH()))
-    } else if (window.crypto) {
+    } else if (crypto) {
       let out = new Uint8Array(Random.WIDTH());
-      window.crypto.getRandomValues(out);
+      crypto.getRandomValues(out);
       return Random.tostring(out);
     } else {
       // mix a few bits from the built-in RNG into the entropy pool.  Because we do

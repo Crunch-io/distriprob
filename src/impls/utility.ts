@@ -29,7 +29,7 @@
  *
  */
 
-const fs = require("fs");
+//const fs = require("fs");
 
 export class Utility {
 
@@ -37,22 +37,22 @@ export class Utility {
     return typeof process === "object" && process + "" === "[object process]";
   }
 
-  private static getFiles(dir: string, files_: string[]): string[] {
-    var files = fs.readdirSync(dir);
-    for (var i in files){
-      var name = dir + '/' + files[i];
-      if (fs.statSync(name).isDirectory()){
-        Utility.getFiles(name, files_);
-      } else {
-        files_.push(name.replace(/\.[^/.]+$/, ""));
-      }
-    }
-    return files_;
-  }
-
-  public static getAllDependencyPaths(rootDir: string): string[] {
-    return Utility.getFiles(rootDir, []);
-  }
+  // private static getFiles(dir: string, files_: string[]): string[] {
+  //   var files = fs.readdirSync(dir);
+  //   for (var i in files){
+  //     var name = dir + '/' + files[i];
+  //     if (fs.statSync(name).isDirectory()){
+  //       Utility.getFiles(name, files_);
+  //     } else {
+  //       files_.push(name.replace(/\.[^/.]+$/, ""));
+  //     }
+  //   }
+  //   return files_;
+  // }
+  //
+  // public static getAllDependencyPaths(rootDir: string): string[] {
+  //   return Utility.getFiles(rootDir, []);
+  // }
 }
 
 // for (let dependency of Utility.getAllDependencyPaths("../../src/impls")) {

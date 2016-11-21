@@ -125,6 +125,7 @@ export class Laborer {
     require("./skewNormalDist").SkewNormalDist,
     require("./studentsTDist").StudentsTDist,
     require("./uniformDist").UniformDist,
+    require("./utility").Utility,
 
 
 
@@ -156,8 +157,6 @@ export class Laborer {
 
   private resolve(value) {
     const resolution = this.resolutionQueue.shift();
-
-    console.log("value:", value);
 
     if (this.dead && this.resolutionQueue.length === 0) {
       this.thread.kill();
@@ -246,8 +245,6 @@ export class Laborer {
         msg += `${argStr})`
       }
     }
-
-    console.log(`sending message: ${msg}`);
 
     return this.sendMessageToThread(msg);
   }
