@@ -1,0 +1,1 @@
+export declare function check(value: any, parameterName: string, functionName: string, type: "real" | "positive_real" | "nonnegative_real" | "integer" | "positive_integer" | "nonnegative_integer" | "probability" | "boolean" | "number/string" | "seed"): void;

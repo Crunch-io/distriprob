@@ -1,7 +1,6 @@
 # Created by .ignore support plugin (hsz.mobi)
 .idea/
 distriprob.iml
-lib/
 literature/
 node_modules/
 **/typings
